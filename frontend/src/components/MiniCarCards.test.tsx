@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 
 import { MiniCarCards } from './MiniCarCards';
 
@@ -87,7 +87,48 @@ describe('MiniCarCards', () => {
 
     expect(screen.getByRole('img', { name: /ferrari f40/i })).toHaveAttribute(
       'src',
-      '/placeholder-mini-car.svg'
+      '/placeholder-mini-car.png'
     );
+  });
+
+  it('renders edit and delete actions inside the image overlay instead of the card body', () => {
+    render(
+      <MiniCarCards
+        items={[
+          {
+            id: '1',
+            carBrand: 'Ford',
+            carModel: 'Mustang',
+            carYear: 1967,
+            miniBrand: 'Hot Wheels',
+            miniScale: '1:64',
+            photoFilename: 'mustang.png',
+            photoOriginalName: 'mustang.png',
+            photoPath: '/tmp/mustang.png',
+            photoUrl: '/uploads/mustang.png',
+            createdAt: '2026-06-14T00:00:00.000Z',
+            updatedAt: '2026-06-14T00:00:00.000Z',
+          },
+        ]}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+      />
+    );
+
+    const image = screen.getByRole('img', { name: /ford mustang/i });
+    const imageArea = image.parentElement;
+
+    expect(imageArea).not.toBeNull();
+    expect(within(imageArea as HTMLElement).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+    expect(
+      within(imageArea as HTMLElement).getByRole('button', { name: /delete/i })
+    ).toBeInTheDocument();
+
+    const detailsPanel = screen.getByText(/ford mustang/i).closest('div');
+    expect(detailsPanel).not.toBeNull();
+    expect(within(detailsPanel as HTMLElement).queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
+    expect(
+      within(detailsPanel as HTMLElement).queryByRole('button', { name: /delete/i })
+    ).not.toBeInTheDocument();
   });
 });

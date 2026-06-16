@@ -85,7 +85,10 @@ describe('App', () => {
     expect(
       screen.getByRole('heading', { name: /mini car catalog/i })
     ).toBeInTheDocument();
-    expect(screen.getByText(/viewing as cards/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /cards/i })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
 
     await user.click(screen.getByRole('button', { name: /table/i }));
 

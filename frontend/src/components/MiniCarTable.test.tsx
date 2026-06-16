@@ -29,7 +29,7 @@ describe('MiniCarTable', () => {
 
     expect(screen.getByRole('img', { name: /ferrari f40/i })).toHaveAttribute(
       'src',
-      '/placeholder-mini-car.svg'
+      '/placeholder-mini-car.png'
     );
   });
 });

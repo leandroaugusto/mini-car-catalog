@@ -1,5 +1,5 @@
-import { MiniCar } from '../types/miniCar';
-import { getMiniCarPhotoUrl } from '../utils/photos';
+import { MiniCar } from "../types/miniCar";
+import { getMiniCarPhotoUrl } from "../utils/photos";
 
 interface MiniCarCardsProps {
   items: MiniCar[];
@@ -22,6 +22,24 @@ export function MiniCarCards({ items, onEdit, onDelete }: MiniCarCardsProps) {
                 alt={`${item.carBrand} ${item.carModel}`}
                 className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
               />
+              <div className="absolute inset-0 bg-slate-950/40 opacity-100 transition duration-300 sm:opacity-0 sm:group-hover:opacity-100">
+                <div className="absolute inset-x-4 top-4 flex gap-2">
+                  <button
+                    type="button"
+                    className="flex-1 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-slate-800 shadow-sm backdrop-blur-sm transition hover:bg-white"
+                    onClick={() => onEdit(item)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    className="flex-1 rounded-full bg-rose-600/90 px-4 py-2 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition hover:bg-rose-500"
+                    onClick={() => onDelete(item)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
               <span className="absolute bottom-4 left-4 rounded-full bg-slate-950/70 px-3 py-1 text-sm font-semibold uppercase tracking-[0.18em] text-white backdrop-blur-sm">
                 {item.carYear}
               </span>
@@ -44,39 +62,38 @@ export function MiniCarCards({ items, onEdit, onDelete }: MiniCarCardsProps) {
 
               <dl className="grid grid-cols-2 gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-slate-400">Car Brand</dt>
-                  <dd className="mt-1 font-medium text-slate-900">{item.carBrand}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-slate-400">
+                    Car Brand
+                  </dt>
+                  <dd className="mt-1 font-medium text-slate-900">
+                    {item.carBrand}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-slate-400">Mini Brand</dt>
-                  <dd className="mt-1 font-medium text-slate-900">{item.miniBrand}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-slate-400">
+                    Mini Brand
+                  </dt>
+                  <dd className="mt-1 font-medium text-slate-900">
+                    {item.miniBrand}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-slate-400">Model</dt>
-                  <dd className="mt-1 font-medium text-slate-900">{item.carModel}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-slate-400">
+                    Model
+                  </dt>
+                  <dd className="mt-1 font-medium text-slate-900">
+                    {item.carModel}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-xs uppercase tracking-wide text-slate-400">Scale</dt>
-                  <dd className="mt-1 font-medium text-slate-900">{item.miniScale}</dd>
+                  <dt className="text-xs uppercase tracking-wide text-slate-400">
+                    Scale
+                  </dt>
+                  <dd className="mt-1 font-medium text-slate-900">
+                    {item.miniScale}
+                  </dd>
                 </div>
               </dl>
-
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  className="flex-1 rounded-full border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
-                  onClick={() => onEdit(item)}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="flex-1 rounded-full border border-rose-200 px-4 py-2.5 text-sm font-medium text-rose-600 transition hover:bg-rose-50"
-                  onClick={() => onDelete(item)}
-                >
-                  Delete
-                </button>
-              </div>
             </div>
           </article>
         ))}

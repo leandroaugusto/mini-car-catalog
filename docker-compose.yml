@@ -5,6 +5,9 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    volumes:
+      - ./frontend:/app
+      - frontend-node-modules:/app/node_modules
 
   backend:
     build: ./backend
@@ -28,5 +31,6 @@ services:
       - mongo-data:/data/db
 
 volumes:
+  frontend-node-modules:
   mongo-data:
   uploads-data:
