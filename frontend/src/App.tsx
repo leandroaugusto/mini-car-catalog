@@ -14,6 +14,7 @@ import { MiniCarCards } from './components/MiniCarCards';
 import { MiniCarForm } from './components/MiniCarForm';
 import { MiniCarTable } from './components/MiniCarTable';
 import { ViewToggle } from './components/ViewToggle';
+import { useLocalStorageState } from './hooks/useLocalStorageState';
 import { useMiniCars } from './hooks/useMiniCars';
 import { MiniCar, MiniCarFormValues } from './types/miniCar';
 
@@ -26,9 +27,17 @@ function getVisiblePages(currentPage: number, totalPages: number) {
   return Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index);
 }
 
+const VIEW_PREFERENCE_KEY = 'mini-car-catalog:view-preference';
+
 export default function App() {
   const { items, loading, error, filters, pagination, setFilters, refresh } = useMiniCars();
-  const [view, setView] = useState<'table' | 'cards'>('cards');
+  const [view, setView] = useLocalStorageState<'table' | 'cards'>(
+    VIEW_PREFERENCE_KEY,
+    'cards',
+    {
+      isValid: (value): value is 'table' | 'cards' => value === 'table' || value === 'cards',
+    }
+  );
   const [editingItem, setEditingItem] = useState<MiniCar | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [itemPendingDelete, setItemPendingDelete] = useState<MiniCar | null>(null);

@@ -73,6 +73,7 @@ function mockCatalogState(overrides?: Partial<ReturnType<typeof useMiniCars>>) {
 describe('App', () => {
   beforeEach(() => {
     mockedDeleteMiniCar.mockReset().mockResolvedValue(undefined);
+    window.localStorage.clear();
   });
 
   it('renders the catalog heading and toggles between table and card views', async () => {
@@ -89,6 +90,28 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: /table/i }));
 
     expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+
+  it('loads the saved table view preference from localStorage', () => {
+    window.localStorage.setItem('mini-car-catalog:view-preference', JSON.stringify('table'));
+    mockCatalogState();
+
+    render(<App />);
+
+    expect(screen.getByRole('table')).toBeInTheDocument();
+  });
+
+  it('saves the selected view preference to localStorage', async () => {
+    const user = userEvent.setup();
+    mockCatalogState();
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: /table/i }));
+
+    expect(window.localStorage.getItem('mini-car-catalog:view-preference')).toBe(
+      JSON.stringify('table')
+    );
   });
 
   it('opens and cancels the delete confirmation modal', async () => {
