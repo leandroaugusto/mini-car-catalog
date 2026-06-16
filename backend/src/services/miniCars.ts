@@ -1,0 +1,185 @@
+import { MiniCar, MiniCarDocument } from '../models/miniCar';
+import { MiniCarListQuery, MiniCarPayload } from '../types/miniCar';
+import { buildPhotoUrl, deleteFileIfExists, escapeRegex } from '../utils/files';
+import { HttpError } from '../utils/httpError';
+
+function serializeMiniCar(item: MiniCarDocument) {
+  return {
+    id: item._id.toString(),
+    carBrand: item.carBrand,
+    carModel: item.carModel,
+    carYear: item.carYear,
+    miniBrand: item.miniBrand,
+    collection: item.collectionName,
+    miniScale: item.miniScale,
+    photoFilename: item.photoFilename,
+    photoOriginalName: item.photoOriginalName,
+    photoPath: item.photoPath,
+    photoUrl: buildPhotoUrl(item.photoFilename),
+    createdAt: item.createdAt,
+    updatedAt: item.updatedAt,
+  };
+}
+
+function buildListFilter(query: MiniCarListQuery) {
+  const filter: Record<string, unknown> = {};
+
+  if (query.carBrand) filter.carBrand = query.carBrand;
+  if (query.carModel) filter.carModel = query.carModel;
+  if (query.carYear) filter.carYear = query.carYear;
+  if (query.miniBrand) filter.miniBrand = query.miniBrand;
+  if (query.collection) filter.collectionName = query.collection;
+  if (query.miniScale) filter.miniScale = query.miniScale;
+
+  if (query.search) {
+    const expression = { $regex: escapeRegex(query.search), $options: 'i' };
+    filter.$or = [{ carBrand: expression }, { carModel: expression }];
+  }
+
+  return filter;
+}
+
+function buildSort(query: MiniCarListQuery) {
+  const allowedSortFields = new Set([
+    'carBrand',
+    'carModel',
+    'carYear',
+    'miniBrand',
+    'collection',
+    'miniScale',
+    'createdAt',
+  ]);
+
+  const sortBy = allowedSortFields.has(query.sortBy ?? '')
+    ? (query.sortBy as string)
+    : 'createdAt';
+  const sortDirection = query.sortOrder === 'asc' ? 1 : -1;
+
+  return { [sortBy]: sortDirection } as Record<string, 1 | -1>;
+}
+
+async function findMiniCarOrThrow(id: string) {
+  const miniCar = await MiniCar.findById(id);
+
+  if (!miniCar) {
+    throw new HttpError(404, 'Mini car not found');
+  }
+
+  return miniCar;
+}
+
+export async function createMiniCar(
+  payload: MiniCarPayload,
+  file?: Express.Multer.File
+) {
+  const miniCar = await MiniCar.create({
+    carBrand: payload.carBrand,
+    carModel: payload.carModel,
+    carYear: payload.carYear,
+    miniBrand: payload.miniBrand,
+    collectionName: payload.collection,
+    miniScale: payload.miniScale,
+    photoFilename: file?.filename,
+    photoOriginalName: file?.originalname,
+    photoPath: file?.path,
+  });
+
+  return serializeMiniCar(miniCar.toObject() as MiniCarDocument);
+}
+
+export async function listMiniCars(query: MiniCarListQuery) {
+  const filter = buildListFilter(query);
+  const [items, totalItems] = await Promise.all([
+    MiniCar.find(filter)
+      .sort(buildSort(query))
+      .skip((query.page - 1) * query.pageSize)
+      .limit(query.pageSize),
+    MiniCar.countDocuments(filter),
+  ]);
+
+  return {
+    items: items.map((item) => serializeMiniCar(item.toObject() as MiniCarDocument)),
+    pagination: {
+      page: query.page,
+      pageSize: query.pageSize,
+      totalItems,
+      totalPages: Math.max(1, Math.ceil(totalItems / query.pageSize)),
+    },
+  };
+}
+
+export async function getMiniCarById(id: string) {
+  const miniCar = await findMiniCarOrThrow(id);
+  return serializeMiniCar(miniCar.toObject() as MiniCarDocument);
+}
+
+export async function updateMiniCar(
+  id: string,
+  payload: MiniCarPayload,
+  file?: Express.Multer.File
+) {
+  const miniCar = await findMiniCarOrThrow(id);
+  const previousPhotoPath = miniCar.photoPath;
+
+  miniCar.carBrand = payload.carBrand;
+  miniCar.carModel = payload.carModel;
+  miniCar.carYear = payload.carYear;
+  miniCar.miniBrand = payload.miniBrand;
+  miniCar.collectionName = payload.collection;
+  miniCar.miniScale = payload.miniScale;
+
+  if (file) {
+    miniCar.photoFilename = file.filename;
+    miniCar.photoOriginalName = file.originalname;
+    miniCar.photoPath = file.path;
+  }
+
+  await miniCar.save();
+
+  if (file) {
+    deleteFileIfExists(previousPhotoPath);
+  }
+
+  return serializeMiniCar(miniCar.toObject() as MiniCarDocument);
+}
+
+export async function deleteMiniCar(id: string) {
+  const miniCar = await findMiniCarOrThrow(id);
+  const photoPath = miniCar.photoPath;
+
+  await miniCar.deleteOne();
+  deleteFileIfExists(photoPath);
+}
+
+export async function getBrandSuggestions(query: string) {
+  const items = await MiniCar.distinct('carBrand', {
+    carBrand: { $regex: escapeRegex(query), $options: 'i' },
+  });
+
+  return items.sort().slice(0, 10);
+}
+
+export async function getMiniBrandSuggestions(query: string) {
+  const items = await MiniCar.distinct('miniBrand', {
+    miniBrand: { $regex: escapeRegex(query), $options: 'i' },
+  });
+
+  return items.sort().slice(0, 10);
+}
+
+export async function getCollectionSuggestions(query: string) {
+  const items = await MiniCar.distinct('collectionName', {
+    collectionName: { $regex: escapeRegex(query), $options: 'i' },
+  });
+
+  return items.filter(Boolean).sort().slice(0, 10);
+}
+
+export async function getModelSuggestions(query: string, brand: string) {
+  const items = await MiniCar.distinct('carModel', {
+    carBrand: brand,
+    carModel: { $regex: escapeRegex(query), $options: 'i' },
+  });
+
+  return items.sort().slice(0, 10);
+}
