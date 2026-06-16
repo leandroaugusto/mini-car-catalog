@@ -82,6 +82,20 @@ describe('CatalogToolbar', () => {
     expect(screen.getByRole('textbox', { name: /search/i })).toBeInTheDocument();
   });
 
+  it('renders display controls in a separate section from catalog filters', () => {
+    render(<CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={jest.fn()} />);
+
+    expect(
+      screen.getByRole('heading', { name: /catalog display/i })
+    ).toBeInTheDocument();
+
+    const filtersPanel = screen.getByRole('button', { name: /catalog filters/i }).parentElement;
+
+    expect(filtersPanel).not.toHaveTextContent(/sort by/i);
+    expect(filtersPanel).not.toHaveTextContent(/sort order/i);
+    expect(filtersPanel).not.toHaveTextContent(/items per page/i);
+  });
+
   it('collapses and re-expands filters without losing values', async () => {
     const user = userEvent.setup();
 

@@ -10,10 +10,6 @@ interface MiniCarCardsProps {
 export function MiniCarCards({ items, onEdit, onDelete }: MiniCarCardsProps) {
   return (
     <section className="space-y-5">
-      <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-slate-500">Viewing as cards</p>
-        <p className="text-sm text-slate-400">Collector showcase</p>
-      </div>
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
           <article

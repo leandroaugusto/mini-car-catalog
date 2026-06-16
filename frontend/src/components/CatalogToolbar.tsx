@@ -207,63 +207,77 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
                   ))}
                 </select>
               </div>
-
-              <div>
-                <label htmlFor="sortBy" className={labelClassName}>
-                  Sort By
-                </label>
-                <select
-                  id="sortBy"
-                  value={filters.sortBy}
-                  className={inputClassName}
-                  onChange={(event) => onChange({ sortBy: event.target.value })}
-                >
-                  <option value="createdAt">Created</option>
-                  <option value="carBrand">Car Brand</option>
-                  <option value="carModel">Car Model</option>
-                  <option value="carYear">Car Year</option>
-                  <option value="miniBrand">Mini Brand</option>
-                  <option value="miniScale">Mini Scale</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="sortOrder" className={labelClassName}>
-                  Sort Order
-                </label>
-                <select
-                  id="sortOrder"
-                  value={filters.sortOrder}
-                  className={inputClassName}
-                  onChange={(event) =>
-                    onChange({ sortOrder: event.target.value as 'asc' | 'desc' })
-                  }
-                >
-                  <option value="desc">Descending</option>
-                  <option value="asc">Ascending</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="pageSize" className={labelClassName}>
-                  Items Per Page
-                </label>
-                <select
-                  id="pageSize"
-                  value={String(filters.pageSize)}
-                  className={inputClassName}
-                  onChange={(event) =>
-                    onChange({ pageSize: Number(event.target.value), page: 1 })
-                  }
-                >
-                  <option value="20">20 items</option>
-                  <option value="50">50 items</option>
-                  <option value="100">100 items</option>
-                </select>
-              </div>
             </div>
           </div>
         ) : null}
+      </section>
+
+      <section className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur">
+        <div className="mb-5">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
+            Catalog Display
+          </p>
+          <h2 className="mt-2 text-xl font-semibold text-slate-900">Catalog Display</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Control how your catalog is ordered and how many items appear per page.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <div>
+            <label htmlFor="sortBy" className={labelClassName}>
+              Sort By
+            </label>
+            <select
+              id="sortBy"
+              value={filters.sortBy}
+              className={inputClassName}
+              onChange={(event) => onChange({ sortBy: event.target.value })}
+            >
+              <option value="createdAt">Created</option>
+              <option value="carBrand">Car Brand</option>
+              <option value="carModel">Car Model</option>
+              <option value="carYear">Car Year</option>
+              <option value="miniBrand">Mini Brand</option>
+              <option value="miniScale">Mini Scale</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="sortOrder" className={labelClassName}>
+              Sort Order
+            </label>
+            <select
+              id="sortOrder"
+              value={filters.sortOrder}
+              className={inputClassName}
+              onChange={(event) =>
+                onChange({ sortOrder: event.target.value as 'asc' | 'desc' })
+              }
+            >
+              <option value="desc">Descending</option>
+              <option value="asc">Ascending</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="pageSize" className={labelClassName}>
+              Items Per Page
+            </label>
+            <select
+              id="pageSize"
+              value={String(filters.pageSize)}
+              className={inputClassName}
+              onChange={(event) =>
+                onChange({ pageSize: Number(event.target.value), page: 1 })
+              }
+            >
+              <option value="20">20 items</option>
+              <option value="50">50 items</option>
+              <option value="100">100 items</option>
+            </select>
+          </div>
+        </div>
       </section>
     </div>
   );
