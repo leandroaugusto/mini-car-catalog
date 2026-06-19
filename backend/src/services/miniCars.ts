@@ -4,6 +4,7 @@ import { MiniCar, MiniCarDocument } from '../models/miniCar';
 import { buildPhotoUrl, deleteObject, uploadObject } from '../storage/objectStorage';
 import { MiniCarListQuery, MiniCarPayload } from '../types/miniCar';
 import { escapeRegex } from '../utils/files';
+import { optimizeUploadedImage } from '../utils/imageProcessing';
 import { HttpError } from '../utils/httpError';
 
 function serializeMiniCar(item: MiniCarDocument) {
@@ -75,11 +76,18 @@ export async function createMiniCar(
   payload: MiniCarPayload,
   file?: Express.Multer.File
 ) {
-  const uploadedPhoto = file
-    ? await uploadObject({
+  const optimizedFile = file
+    ? await optimizeUploadedImage({
         buffer: file.buffer,
         originalName: file.originalname,
         contentType: file.mimetype,
+      })
+    : undefined;
+  const uploadedPhoto = file
+    ? await uploadObject({
+        buffer: optimizedFile!.buffer,
+        originalName: optimizedFile!.originalName,
+        contentType: optimizedFile!.contentType,
       })
     : undefined;
 
@@ -135,11 +143,18 @@ export async function updateMiniCar(
 ) {
   const miniCar = await findMiniCarOrThrow(id);
   const previousPhotoKey = miniCar.photoKey;
-  const uploadedPhoto = file
-    ? await uploadObject({
+  const optimizedFile = file
+    ? await optimizeUploadedImage({
         buffer: file.buffer,
         originalName: file.originalname,
         contentType: file.mimetype,
+      })
+    : undefined;
+  const uploadedPhoto = file
+    ? await uploadObject({
+        buffer: optimizedFile!.buffer,
+        originalName: optimizedFile!.originalName,
+        contentType: optimizedFile!.contentType,
       })
     : undefined;
 

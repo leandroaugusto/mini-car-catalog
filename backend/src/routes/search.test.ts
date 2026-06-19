@@ -9,9 +9,9 @@ import {
 import { createImageFixture } from '../test/helpers/files';
 
 async function seedCars() {
-  const mustangImage = createImageFixture('search-mustang.png');
-  const camaroImage = createImageFixture('search-camaro.png');
-  const porscheImage = createImageFixture('search-porsche.png');
+  const mustangImage = await createImageFixture('search-mustang.png');
+  const camaroImage = await createImageFixture('search-camaro.png');
+  const porscheImage = await createImageFixture('search-porsche.png');
 
   await request(app)
     .post('/api/minicars')

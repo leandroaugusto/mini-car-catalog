@@ -1,14 +1,21 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import sharp from 'sharp';
 
-const PNG_BASE64 =
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9l9pQAAAAASUVORK5CYII=';
-
-export function createImageFixture(fileName = 'fixture.png') {
+export async function createImageFixture(fileName = 'fixture.png') {
   const filePath = path.join(os.tmpdir(), fileName);
-  fs.writeFileSync(filePath, Buffer.from(PNG_BASE64, 'base64'));
-  return filePath;
+  return sharp({
+    create: {
+      width: 32,
+      height: 32,
+      channels: 3,
+      background: { r: 200, g: 0, b: 0 },
+    },
+  })
+    .png()
+    .toFile(filePath)
+    .then(() => filePath);
 }
 
 export function createTextFixture(fileName = 'fixture.txt') {
