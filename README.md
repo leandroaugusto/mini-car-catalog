@@ -49,6 +49,13 @@ cd backend
 npm run migrate:photos:r2
 ```
 
+To recompress images that are already stored in R2 without changing their keys:
+
+```bash
+cd backend
+npm run optimize:photos:r2
+```
+
 ## Main Features
 
 - Create, list, edit, and delete mini car records

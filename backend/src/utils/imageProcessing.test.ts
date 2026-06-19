@@ -30,4 +30,33 @@ describe('optimizeUploadedImage', () => {
     expect(metadata.height).toBeLessThanOrEqual(1600);
     expect(result.buffer.byteLength).toBeLessThan(inputBuffer.byteLength);
   });
+
+  it('can preserve the original jpeg format for in-place rewrites', async () => {
+    const inputBuffer = await sharp({
+      create: {
+        width: 2200,
+        height: 1400,
+        channels: 3,
+        background: { r: 0, g: 80, b: 220 },
+      },
+    })
+      .jpeg({ quality: 100 })
+      .toBuffer();
+
+    const result = await optimizeUploadedImage({
+      buffer: inputBuffer,
+      originalName: 'existing-car.jpeg',
+      contentType: 'image/jpeg',
+      formatStrategy: 'preserve',
+    });
+
+    const metadata = await sharp(result.buffer).metadata();
+
+    expect(result.contentType).toBe('image/jpeg');
+    expect(result.originalName).toBe('existing-car.jpeg');
+    expect(metadata.format).toBe('jpeg');
+    expect(metadata.width).toBeLessThanOrEqual(1600);
+    expect(metadata.height).toBeLessThanOrEqual(1600);
+    expect(result.buffer.byteLength).toBeLessThan(inputBuffer.byteLength);
+  });
 });

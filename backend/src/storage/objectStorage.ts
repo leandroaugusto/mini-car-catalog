@@ -1,7 +1,12 @@
 import path from 'path';
 import { randomUUID } from 'crypto';
 
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 
 interface UploadObjectInput {
   buffer: Buffer;
@@ -74,6 +79,46 @@ export async function uploadObject(input: UploadObjectInput) {
     key,
     originalName: input.originalName,
   };
+}
+
+async function readBodyAsBuffer(body: unknown): Promise<Buffer> {
+  if (!body) {
+    throw new Error('Object body is empty');
+  }
+
+  if (
+    typeof body === 'object' &&
+    body !== null &&
+    'transformToByteArray' in body &&
+    typeof (body as { transformToByteArray?: unknown }).transformToByteArray === 'function'
+  ) {
+    const bytes = await (
+      body as { transformToByteArray(): Promise<Uint8Array> }
+    ).transformToByteArray();
+    return Buffer.from(bytes);
+  }
+
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    const stream = body as NodeJS.ReadableStream;
+
+    stream.on('data', (chunk) =>
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+    );
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('error', reject);
+  });
+}
+
+export async function downloadObject(photoKey: string) {
+  const response = await getObjectStorageClient().send(
+    new GetObjectCommand({
+      Bucket: getBucketName(),
+      Key: photoKey,
+    })
+  );
+
+  return readBodyAsBuffer(response.Body);
 }
 
 export async function deleteObject(photoKey?: string | null) {
