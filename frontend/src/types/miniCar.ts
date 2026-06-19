@@ -6,6 +6,7 @@ export interface MiniCar {
   miniBrand: string;
   collection?: string;
   miniScale: string;
+  photoKey?: string;
   photoFilename?: string;
   photoOriginalName?: string;
   photoPath?: string;

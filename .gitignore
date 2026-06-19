@@ -6,5 +6,8 @@ backend/coverage/
 backend/uploads/
 uploads/
 frontend/coverage/
+.env
+.env.*
+!.env.example
 .DS_Store
 .superpowers/

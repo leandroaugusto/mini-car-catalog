@@ -1,6 +1,3 @@
-import fs from 'fs';
-import path from 'path';
-
 import request from 'supertest';
 
 import { app } from '../app';
@@ -12,11 +9,18 @@ import {
 import { createImageFixture, createTextFixture } from '../test/helpers/files';
 
 describe('mini car CRUD API', () => {
+  const storage = jest.requireMock('../storage/objectStorage') as {
+    deleteObject: jest.Mock;
+    uploadObject: jest.Mock;
+  };
+
   beforeAll(async () => {
     await connectTestDatabase();
   });
 
   afterEach(async () => {
+    storage.deleteObject.mockClear();
+    storage.uploadObject.mockClear();
     await clearTestDatabase();
   });
 
@@ -41,8 +45,9 @@ describe('mini car CRUD API', () => {
     expect(response.body.item.carBrand).toBe('Ford');
     expect(response.body.item.carModel).toBe('Mustang');
     expect(response.body.item.collection).toBe('Muscle Cars');
-    expect(response.body.item.photoUrl).toMatch(
-      /^http:\/\/localhost:5001\/uploads\/.+/
+    expect(response.body.item.photoKey).toBe('mini-cars/create-car.png');
+    expect(response.body.item.photoUrl).toBe(
+      'https://cdn.example.com/mini-cars/create-car.png'
     );
   });
 
@@ -58,7 +63,7 @@ describe('mini car CRUD API', () => {
     expect(response.status).toBe(201);
     expect(response.body.item.carBrand).toBe('Ferrari');
     expect(response.body.item.photoFilename).toBeUndefined();
-    expect(response.body.item.photoPath).toBeUndefined();
+    expect(response.body.item.photoKey).toBeUndefined();
     expect(response.body.item.photoUrl).toBeUndefined();
   });
 
@@ -118,7 +123,7 @@ describe('mini car CRUD API', () => {
       .field('miniScale', '1:64')
       .attach('photo', originalImagePath);
 
-    const originalPhotoPath = createResponse.body.item.photoPath as string;
+    const originalPhotoKey = createResponse.body.item.photoKey as string;
 
     const response = await request(app)
       .put(`/api/minicars/${createResponse.body.item.id}`)
@@ -133,10 +138,12 @@ describe('mini car CRUD API', () => {
     expect(response.status).toBe(200);
     expect(response.body.item.carModel).toBe('M3 Sport Evolution');
     expect(response.body.item.collection).toBe('Legends');
-    expect(response.body.item.photoPath).not.toBe(originalPhotoPath);
+    expect(response.body.item.photoKey).toBe('mini-cars/update-replacement.png');
+    expect(response.body.item.photoKey).not.toBe(originalPhotoKey);
+    expect(storage.deleteObject).toHaveBeenCalledWith(originalPhotoKey);
   });
 
-  it('deletes a record and removes its image from disk', async () => {
+  it('deletes a record and removes its image from object storage', async () => {
     const imagePath = createImageFixture('delete-car.png');
 
     const createResponse = await request(app)
@@ -148,14 +155,14 @@ describe('mini car CRUD API', () => {
       .field('miniScale', '1:64')
       .attach('photo', imagePath);
 
-    const storedPhotoPath = createResponse.body.item.photoPath as string;
+    const storedPhotoKey = createResponse.body.item.photoKey as string;
 
     const response = await request(app).delete(
       `/api/minicars/${createResponse.body.item.id}`
     );
 
     expect(response.status).toBe(204);
-    expect(fs.existsSync(path.resolve(storedPhotoPath))).toBe(false);
+    expect(storage.deleteObject).toHaveBeenCalledWith(storedPhotoKey);
   });
 
   it('rejects unsupported image types', async () => {

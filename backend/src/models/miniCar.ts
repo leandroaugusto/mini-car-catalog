@@ -8,9 +8,8 @@ const miniCarSchema = new Schema(
     miniBrand: { type: String, required: true, trim: true },
     collectionName: { type: String, trim: true },
     miniScale: { type: String, required: true, trim: true },
-    photoFilename: { type: String },
+    photoKey: { type: String },
     photoOriginalName: { type: String },
-    photoPath: { type: String },
   },
   { timestamps: true }
 );

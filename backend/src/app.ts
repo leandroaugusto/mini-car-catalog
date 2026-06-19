@@ -3,14 +3,12 @@ import express from 'express';
 import multer from 'multer';
 
 import { miniCarRouter } from './routes/miniCars';
-import { getUploadDir } from './utils/files';
 import { HttpError } from './utils/httpError';
 
 export const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(getUploadDir()));
 app.use('/api', miniCarRouter);
 
 app.get('/api/health', (_req, res) => {

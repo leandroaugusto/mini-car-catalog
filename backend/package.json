@@ -7,10 +7,12 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
+    "migrate:photos:r2": "npm run build && node dist/scripts/migratePhotosToR2.js",
     "test": "jest --config jest.config.cjs --runInBand --watchman=false"
   },
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1073.0",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "mongoose": "^9.7.0",

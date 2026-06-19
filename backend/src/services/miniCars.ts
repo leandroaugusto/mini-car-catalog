@@ -1,6 +1,9 @@
+import path from 'path';
+
 import { MiniCar, MiniCarDocument } from '../models/miniCar';
+import { buildPhotoUrl, deleteObject, uploadObject } from '../storage/objectStorage';
 import { MiniCarListQuery, MiniCarPayload } from '../types/miniCar';
-import { buildPhotoUrl, deleteFileIfExists, escapeRegex } from '../utils/files';
+import { escapeRegex } from '../utils/files';
 import { HttpError } from '../utils/httpError';
 
 function serializeMiniCar(item: MiniCarDocument) {
@@ -12,10 +15,10 @@ function serializeMiniCar(item: MiniCarDocument) {
     miniBrand: item.miniBrand,
     collection: item.collectionName,
     miniScale: item.miniScale,
-    photoFilename: item.photoFilename,
+    photoKey: item.photoKey,
+    photoFilename: item.photoKey ? path.basename(item.photoKey) : undefined,
     photoOriginalName: item.photoOriginalName,
-    photoPath: item.photoPath,
-    photoUrl: buildPhotoUrl(item.photoFilename),
+    photoUrl: buildPhotoUrl(item.photoKey),
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
   };
@@ -72,19 +75,31 @@ export async function createMiniCar(
   payload: MiniCarPayload,
   file?: Express.Multer.File
 ) {
-  const miniCar = await MiniCar.create({
-    carBrand: payload.carBrand,
-    carModel: payload.carModel,
-    carYear: payload.carYear,
-    miniBrand: payload.miniBrand,
-    collectionName: payload.collection,
-    miniScale: payload.miniScale,
-    photoFilename: file?.filename,
-    photoOriginalName: file?.originalname,
-    photoPath: file?.path,
-  });
+  const uploadedPhoto = file
+    ? await uploadObject({
+        buffer: file.buffer,
+        originalName: file.originalname,
+        contentType: file.mimetype,
+      })
+    : undefined;
 
-  return serializeMiniCar(miniCar.toObject() as MiniCarDocument);
+  try {
+    const miniCar = await MiniCar.create({
+      carBrand: payload.carBrand,
+      carModel: payload.carModel,
+      carYear: payload.carYear,
+      miniBrand: payload.miniBrand,
+      collectionName: payload.collection,
+      miniScale: payload.miniScale,
+      photoKey: uploadedPhoto?.key,
+      photoOriginalName: uploadedPhoto?.originalName,
+    });
+
+    return serializeMiniCar(miniCar.toObject() as MiniCarDocument);
+  } catch (error) {
+    await deleteObject(uploadedPhoto?.key);
+    throw error;
+  }
 }
 
 export async function listMiniCars(query: MiniCarListQuery) {
@@ -119,7 +134,14 @@ export async function updateMiniCar(
   file?: Express.Multer.File
 ) {
   const miniCar = await findMiniCarOrThrow(id);
-  const previousPhotoPath = miniCar.photoPath;
+  const previousPhotoKey = miniCar.photoKey;
+  const uploadedPhoto = file
+    ? await uploadObject({
+        buffer: file.buffer,
+        originalName: file.originalname,
+        contentType: file.mimetype,
+      })
+    : undefined;
 
   miniCar.carBrand = payload.carBrand;
   miniCar.carModel = payload.carModel;
@@ -128,16 +150,20 @@ export async function updateMiniCar(
   miniCar.collectionName = payload.collection;
   miniCar.miniScale = payload.miniScale;
 
-  if (file) {
-    miniCar.photoFilename = file.filename;
-    miniCar.photoOriginalName = file.originalname;
-    miniCar.photoPath = file.path;
+  if (uploadedPhoto) {
+    miniCar.photoKey = uploadedPhoto.key;
+    miniCar.photoOriginalName = uploadedPhoto.originalName;
   }
 
-  await miniCar.save();
+  try {
+    await miniCar.save();
+  } catch (error) {
+    await deleteObject(uploadedPhoto?.key);
+    throw error;
+  }
 
-  if (file) {
-    deleteFileIfExists(previousPhotoPath);
+  if (uploadedPhoto) {
+    await deleteObject(previousPhotoKey);
   }
 
   return serializeMiniCar(miniCar.toObject() as MiniCarDocument);
@@ -145,10 +171,10 @@ export async function updateMiniCar(
 
 export async function deleteMiniCar(id: string) {
   const miniCar = await findMiniCarOrThrow(id);
-  const photoPath = miniCar.photoPath;
+  const photoKey = miniCar.photoKey;
 
   await miniCar.deleteOne();
-  deleteFileIfExists(photoPath);
+  await deleteObject(photoKey);
 }
 
 export async function getBrandSuggestions(query: string) {
