@@ -1,0 +1,8 @@
+{
+  "name": "mini-car-catalog",
+  "private": true,
+  "scripts": {
+    "backup:db": "bash scripts/create-db-backup.sh",
+    "restore:db": "bash scripts/restore-db-backup.sh"
+  }
+}

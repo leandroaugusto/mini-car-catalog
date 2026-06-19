@@ -40,6 +40,29 @@ cd backend && npm test
 cd frontend && npm test
 ```
 
+## Create A Database Backup
+
+To create a timestamped MongoDB backup archive from the running Docker Compose stack:
+
+```bash
+bash scripts/create-db-backup.sh
+npm run backup:db
+```
+
+To restore a backup archive into the default database:
+
+```bash
+bash scripts/restore-db-backup.sh backups/mini-car-catalog-db-YYYYMMDD-HHMMSS.archive.gz
+npm run restore:db -- backups/mini-car-catalog-db-YYYYMMDD-HHMMSS.archive.gz
+```
+
+To restore into a separate test database first:
+
+```bash
+bash scripts/restore-db-backup.sh backups/mini-car-catalog-db-YYYYMMDD-HHMMSS.archive.gz mini-car-catalog-restore-test
+npm run restore:db -- backups/mini-car-catalog-db-YYYYMMDD-HHMMSS.archive.gz mini-car-catalog-restore-test
+```
+
 ## Migrate Existing Local Uploads To R2
 
 If you already have images stored in the old local uploads directory, migrate them with:

@@ -6,6 +6,7 @@ backend/coverage/
 backend/uploads/
 uploads/
 frontend/coverage/
+backups/
 .env
 .env.*
 !.env.example
