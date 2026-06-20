@@ -8,16 +8,18 @@ jest.mock('../api/miniCars', () => ({
 }));
 
 const mockedFetchMiniCars = jest.mocked(fetchMiniCars);
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation((message?: unknown) => {
-  if (
-    typeof message === 'string' &&
-    message.includes('inside a test was not wrapped in act')
-  ) {
-    return;
-  }
+const consoleErrorSpy = jest
+  .spyOn(console, 'error')
+  .mockImplementation((message?: unknown) => {
+    if (
+      typeof message === 'string' &&
+      message.includes('inside a test was not wrapped in act')
+    ) {
+      return;
+    }
 
-  console.warn(message);
-});
+    console.warn(message);
+  });
 
 describe('useMiniCars', () => {
   beforeEach(() => {
@@ -90,7 +92,9 @@ describe('useMiniCars', () => {
       });
     });
 
-    expect(window.localStorage.getItem('mini-car-catalog:display-preferences')).toBe(
+    expect(
+      window.localStorage.getItem('mini-car-catalog:display-preferences')
+    ).toBe(
       JSON.stringify({
         sortBy: 'carBrand',
         sortOrder: 'asc',

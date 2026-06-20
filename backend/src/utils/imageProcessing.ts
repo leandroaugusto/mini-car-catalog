@@ -21,14 +21,12 @@ function replaceExtension(fileName: string, newExtension: string) {
 }
 
 function buildImagePipeline(buffer: Buffer) {
-  return sharp(buffer)
-    .rotate()
-    .resize({
-      width: MAX_IMAGE_DIMENSION,
-      height: MAX_IMAGE_DIMENSION,
-      fit: 'inside',
-      withoutEnlargement: true,
-    });
+  return sharp(buffer).rotate().resize({
+    width: MAX_IMAGE_DIMENSION,
+    height: MAX_IMAGE_DIMENSION,
+    fit: 'inside',
+    withoutEnlargement: true,
+  });
 }
 
 export async function optimizeUploadedImage(input: UploadedImageInput) {

@@ -1,5 +1,5 @@
-import { MiniCar } from "../types/miniCar";
-import { getMiniCarPhotoUrl } from "../utils/photos";
+import { MiniCar } from '../types/miniCar';
+import { getMiniCarPhotoUrl } from '../utils/photos';
 
 interface MiniCarCardsProps {
   items: MiniCar[];

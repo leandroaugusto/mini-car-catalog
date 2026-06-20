@@ -45,7 +45,10 @@ export function AutocompleteInput({
 
   useEffect(() => {
     setQuery(value);
-    if (!isInternalValueChange.current && value.trim().length >= minQueryLength) {
+    if (
+      !isInternalValueChange.current &&
+      value.trim().length >= minQueryLength
+    ) {
       skipNextFetchQuery.current = value;
     }
     isInternalValueChange.current = false;

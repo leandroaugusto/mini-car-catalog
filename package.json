@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "backup:db": "bash scripts/create-db-backup.sh",
+    "format": "npm --prefix backend run format && npm --prefix frontend run format",
+    "format:check": "npm --prefix backend run format:check && npm --prefix frontend run format:check",
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
     "restore:db": "bash scripts/restore-db-backup.sh",
     "test:coverage": "npm --prefix backend run test:coverage && npm --prefix frontend run test:coverage"
   }

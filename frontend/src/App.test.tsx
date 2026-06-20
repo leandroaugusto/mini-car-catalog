@@ -96,7 +96,10 @@ describe('App', () => {
   });
 
   it('loads the saved table view preference from localStorage', () => {
-    window.localStorage.setItem('mini-car-catalog:view-preference', JSON.stringify('table'));
+    window.localStorage.setItem(
+      'mini-car-catalog:view-preference',
+      JSON.stringify('table')
+    );
     mockCatalogState();
 
     render(<App />);
@@ -112,9 +115,9 @@ describe('App', () => {
 
     await user.click(screen.getByRole('button', { name: /table/i }));
 
-    expect(window.localStorage.getItem('mini-car-catalog:view-preference')).toBe(
-      JSON.stringify('table')
-    );
+    expect(
+      window.localStorage.getItem('mini-car-catalog:view-preference')
+    ).toBe(JSON.stringify('table'));
   });
 
   it('opens and cancels the delete confirmation modal', async () => {
@@ -132,7 +135,9 @@ describe('App', () => {
 
     await user.click(within(dialog).getByRole('button', { name: /cancel/i }));
 
-    expect(screen.queryByRole('dialog', { name: /delete mini car/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('dialog', { name: /delete mini car/i })
+    ).not.toBeInTheDocument();
     expect(mockedDeleteMiniCar).not.toHaveBeenCalled();
   });
 
@@ -144,7 +149,9 @@ describe('App', () => {
 
     await user.click(screen.getByRole('button', { name: /delete/i }));
     await user.click(
-      within(screen.getByRole('dialog', { name: /delete mini car/i })).getByRole('button', {
+      within(
+        screen.getByRole('dialog', { name: /delete mini car/i })
+      ).getByRole('button', {
         name: /^delete$/i,
       })
     );
@@ -154,7 +161,9 @@ describe('App', () => {
       expect(refresh).toHaveBeenCalled();
     });
 
-    expect(screen.queryByRole('dialog', { name: /delete mini car/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('dialog', { name: /delete mini car/i })
+    ).not.toBeInTheDocument();
   });
 
   it('renders clickable page numbers in the footer', async () => {
@@ -203,7 +212,9 @@ describe('App', () => {
 
     render(<App />);
 
-    expect(screen.getByRole('alert')).toHaveTextContent('Failed to load catalog');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'Failed to load catalog'
+    );
   });
 
   it('renders loading skeletons while the catalog is loading', () => {
@@ -214,7 +225,11 @@ describe('App', () => {
 
     render(<App />);
 
-    expect(screen.getAllByText((_, element) => element?.className.includes('animate-pulse') ?? false).length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(
+        (_, element) => element?.className.includes('animate-pulse') ?? false
+      ).length
+    ).toBeGreaterThan(0);
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
   });
 
@@ -234,13 +249,17 @@ describe('App', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', { name: /your showroom is ready for its first mini car/i })
+      screen.getByRole('heading', {
+        name: /your showroom is ready for its first mini car/i,
+      })
     ).toBeInTheDocument();
 
     const addButtons = screen.getAllByRole('button', { name: /add mini car/i });
     await user.click(addButtons[1]);
 
-    expect(screen.getByRole('heading', { name: /add a new mini car/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /add a new mini car/i })
+    ).toBeInTheDocument();
   });
 
   it('navigates with previous and next pagination buttons', async () => {

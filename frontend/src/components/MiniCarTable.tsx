@@ -25,7 +25,10 @@ export function MiniCarTable({ items, onEdit, onDelete }: MiniCarTableProps) {
         </thead>
         <tbody className="divide-y divide-slate-100">
           {items.map((item) => (
-            <tr key={item.id} className="text-sm text-slate-600 transition hover:bg-slate-50/80">
+            <tr
+              key={item.id}
+              className="text-sm text-slate-600 transition hover:bg-slate-50/80"
+            >
               <td className="px-6 py-4">
                 <img
                   src={getMiniCarPhotoUrl(item.photoUrl)}
@@ -33,7 +36,9 @@ export function MiniCarTable({ items, onEdit, onDelete }: MiniCarTableProps) {
                   className="h-14 w-14 rounded-2xl object-cover shadow-sm"
                 />
               </td>
-              <td className="px-6 py-4 font-medium text-slate-900">{item.carBrand}</td>
+              <td className="px-6 py-4 font-medium text-slate-900">
+                {item.carBrand}
+              </td>
               <td className="px-6 py-4">{item.carModel}</td>
               <td className="px-6 py-4">{item.carYear}</td>
               <td className="px-6 py-4">{item.miniBrand}</td>

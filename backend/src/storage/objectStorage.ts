@@ -90,7 +90,8 @@ async function readBodyAsBuffer(body: unknown): Promise<Buffer> {
     typeof body === 'object' &&
     body !== null &&
     'transformToByteArray' in body &&
-    typeof (body as { transformToByteArray?: unknown }).transformToByteArray === 'function'
+    typeof (body as { transformToByteArray?: unknown }).transformToByteArray ===
+      'function'
   ) {
     const bytes = await (
       body as { transformToByteArray(): Promise<Uint8Array> }

@@ -1,4 +1,9 @@
-import { MiniCar, MiniCarFilters, MiniCarFormValues, PaginationState } from '../types/miniCar';
+import {
+  MiniCar,
+  MiniCarFilters,
+  MiniCarFormValues,
+  PaginationState,
+} from '../types/miniCar';
 import { requestJson } from './client';
 
 interface ListResponse {
@@ -34,7 +39,9 @@ function buildFormData(values: MiniCarFormValues) {
   return formData;
 }
 
-export async function fetchMiniCars(filters: MiniCarFilters): Promise<ListResponse> {
+export async function fetchMiniCars(
+  filters: MiniCarFilters
+): Promise<ListResponse> {
   const query = buildQuery(filters);
   return requestJson<ListResponse>(`/minicars?${query}`);
 }

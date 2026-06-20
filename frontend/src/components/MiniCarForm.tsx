@@ -7,7 +7,14 @@ import { createMiniCarSchema } from '../validation/miniCarSchema';
 import { AutocompleteInput } from './AutocompleteInput';
 import { ImageInput } from './ImageInput';
 
-const MINI_SCALE_OPTIONS = ['1:87', '1:64', '1:43', '1:32', '1:24', '1:18'] as const;
+const MINI_SCALE_OPTIONS = [
+  '1:87',
+  '1:64',
+  '1:43',
+  '1:32',
+  '1:24',
+  '1:18',
+] as const;
 
 interface MiniCarFormProps {
   mode: 'create' | 'edit';
@@ -52,7 +59,8 @@ export function MiniCarForm({
   });
 
   const showError = (fieldName: keyof MiniCarFormValues) =>
-    (formik.touched[fieldName] || formik.submitCount > 0) && formik.errors[fieldName]
+    (formik.touched[fieldName] || formik.submitCount > 0) &&
+    formik.errors[fieldName]
       ? String(formik.errors[fieldName])
       : undefined;
 
@@ -91,7 +99,8 @@ export function MiniCarForm({
             {mode === 'edit' ? 'Edit your mini car' : 'Add a new mini car'}
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            Keep your collection polished with clean metadata and a strong photo.
+            Keep your collection polished with clean metadata and a strong
+            photo.
           </p>
         </div>
         <button
@@ -139,7 +148,9 @@ export function MiniCarForm({
             id="carYear"
             name="carYear"
             label="Car Year"
-            value={formik.values.carYear === '' ? '' : String(formik.values.carYear)}
+            value={
+              formik.values.carYear === '' ? '' : String(formik.values.carYear)
+            }
             onBlur={() => formik.setFieldTouched('carYear', true)}
             onChange={(value) => formik.setFieldValue('carYear', value)}
             fetchSuggestions={fetchYearSuggestions}
@@ -208,7 +219,9 @@ export function MiniCarForm({
           />
 
           <div>
-            <p className="mb-3 text-sm font-medium text-slate-700">Current preview</p>
+            <p className="mb-3 text-sm font-medium text-slate-700">
+              Current preview
+            </p>
             <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-4">
               {previewUrl ? (
                 <img

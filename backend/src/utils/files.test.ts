@@ -18,7 +18,9 @@ describe('files utils', () => {
   });
 
   it('creates the upload directory when it does not exist', () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mini-car-catalog-files-'));
+    const tempDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), 'mini-car-catalog-files-')
+    );
     const uploadDir = path.join(tempDir, 'uploads');
     process.env.UPLOAD_DIR = uploadDir;
 

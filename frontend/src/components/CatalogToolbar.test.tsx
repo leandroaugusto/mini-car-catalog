@@ -17,7 +17,9 @@ jest.mock('../api/miniCars', () => ({
 }));
 
 const mockedFetchBrandSuggestions = jest.mocked(fetchBrandSuggestions);
-const mockedFetchCollectionSuggestions = jest.mocked(fetchCollectionSuggestions);
+const mockedFetchCollectionSuggestions = jest.mocked(
+  fetchCollectionSuggestions
+);
 const mockedFetchModelSuggestions = jest.mocked(fetchModelSuggestions);
 const mockedFetchMiniBrandSuggestions = jest.mocked(fetchMiniBrandSuggestions);
 
@@ -51,18 +53,26 @@ describe('CatalogToolbar', () => {
 
     try {
       render(
-        <CatalogToolbar filters={filters} onChange={onChange} onCreate={jest.fn()} />
+        <CatalogToolbar
+          filters={filters}
+          onChange={onChange}
+          onCreate={jest.fn()}
+        />
       );
 
       const yearInput = screen.getByRole('textbox', { name: /car year/i });
 
-      expect(screen.queryByRole('spinbutton', { name: /car year/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('spinbutton', { name: /car year/i })
+      ).not.toBeInTheDocument();
 
       await user.type(yearInput, '190');
 
       await waitFor(() => {
         jest.advanceTimersByTime(300);
-        expect(screen.getByRole('button', { name: '1900' })).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', { name: '1900' })
+        ).toBeInTheDocument();
       });
     } finally {
       jest.useRealTimers();
@@ -70,26 +80,44 @@ describe('CatalogToolbar', () => {
   });
 
   it('splits actions and filters into separate sections with filters expanded by default', () => {
-    render(<CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={jest.fn()} />);
+    render(
+      <CatalogToolbar
+        filters={filters}
+        onChange={jest.fn()}
+        onCreate={jest.fn()}
+      />
+    );
 
     expect(
       screen.getByRole('heading', { name: /manage collection/i })
     ).toBeInTheDocument();
 
-    const filtersToggle = screen.getByRole('button', { name: /catalog filters/i });
+    const filtersToggle = screen.getByRole('button', {
+      name: /catalog filters/i,
+    });
 
     expect(filtersToggle).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('textbox', { name: /search/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('textbox', { name: /search/i })
+    ).toBeInTheDocument();
   });
 
   it('renders display controls in a separate section from catalog filters', () => {
-    render(<CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={jest.fn()} />);
+    render(
+      <CatalogToolbar
+        filters={filters}
+        onChange={jest.fn()}
+        onCreate={jest.fn()}
+      />
+    );
 
     expect(
       screen.getByRole('heading', { name: /catalog display/i })
     ).toBeInTheDocument();
 
-    const filtersPanel = screen.getByRole('button', { name: /catalog filters/i }).parentElement;
+    const filtersPanel = screen.getByRole('button', {
+      name: /catalog filters/i,
+    }).parentElement;
 
     expect(filtersPanel).not.toHaveTextContent(/sort by/i);
     expect(filtersPanel).not.toHaveTextContent(/sort order/i);
@@ -107,31 +135,44 @@ describe('CatalogToolbar', () => {
       />
     );
 
-    const filtersToggle = screen.getByRole('button', { name: /catalog filters/i });
+    const filtersToggle = screen.getByRole('button', {
+      name: /catalog filters/i,
+    });
 
     await user.click(filtersToggle);
     expect(filtersToggle).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.queryByRole('textbox', { name: /search/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('textbox', { name: /search/i })
+    ).not.toBeInTheDocument();
 
     await user.click(filtersToggle);
     expect(filtersToggle).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.getByRole('textbox', { name: /search/i })).toHaveValue('Mustang');
+    expect(screen.getByRole('textbox', { name: /search/i })).toHaveValue(
+      'Mustang'
+    );
   });
 
   it('collapses filters when add mini car is clicked', async () => {
     const user = userEvent.setup();
     const onCreate = jest.fn();
 
-    render(<CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={onCreate} />);
+    render(
+      <CatalogToolbar
+        filters={filters}
+        onChange={jest.fn()}
+        onCreate={onCreate}
+      />
+    );
 
     await user.click(screen.getByRole('button', { name: /add mini car/i }));
 
     expect(onCreate).toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: /catalog filters/i })).toHaveAttribute(
-      'aria-expanded',
-      'false'
-    );
-    expect(screen.queryByRole('textbox', { name: /search/i })).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /catalog filters/i })
+    ).toHaveAttribute('aria-expanded', 'false');
+    expect(
+      screen.queryByRole('textbox', { name: /search/i })
+    ).not.toBeInTheDocument();
   });
 
   it('renders mini scale as a dropdown with preset options', async () => {
@@ -139,7 +180,11 @@ describe('CatalogToolbar', () => {
     const onChange = jest.fn();
 
     render(
-      <CatalogToolbar filters={filters} onChange={onChange} onCreate={jest.fn()} />
+      <CatalogToolbar
+        filters={filters}
+        onChange={onChange}
+        onCreate={jest.fn()}
+      />
     );
 
     const scaleSelect = screen.getByRole('combobox', { name: /mini scale/i });
@@ -168,13 +213,19 @@ describe('CatalogToolbar', () => {
     const onChange = jest.fn();
 
     render(
-      <CatalogToolbar filters={filters} onChange={onChange} onCreate={jest.fn()} />
+      <CatalogToolbar
+        filters={filters}
+        onChange={onChange}
+        onCreate={jest.fn()}
+      />
     );
 
-    const pageSizeSelect = screen.getByRole('combobox', { name: /items per page/i });
-    const pageSizeOptions = Array.from(pageSizeSelect.querySelectorAll('option')).map(
-      (option) => option.textContent
-    );
+    const pageSizeSelect = screen.getByRole('combobox', {
+      name: /items per page/i,
+    });
+    const pageSizeOptions = Array.from(
+      pageSizeSelect.querySelectorAll('option')
+    ).map((option) => option.textContent);
 
     expect(pageSizeSelect).toHaveValue('20');
     expect(pageSizeOptions).toEqual(['20 items', '50 items', '100 items']);
@@ -209,10 +260,22 @@ describe('CatalogToolbar', () => {
     jest.useFakeTimers();
 
     try {
-      render(<CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={jest.fn()} />);
+      render(
+        <CatalogToolbar
+          filters={filters}
+          onChange={jest.fn()}
+          onCreate={jest.fn()}
+        />
+      );
 
-      await user.type(screen.getByRole('textbox', { name: /car brand/i }), 'Fo');
-      await user.type(screen.getByRole('textbox', { name: /mini brand/i }), 'Ho');
+      await user.type(
+        screen.getByRole('textbox', { name: /car brand/i }),
+        'Fo'
+      );
+      await user.type(
+        screen.getByRole('textbox', { name: /mini brand/i }),
+        'Ho'
+      );
 
       await waitFor(() => {
         jest.advanceTimersByTime(300);
@@ -230,9 +293,18 @@ describe('CatalogToolbar', () => {
     jest.useFakeTimers();
 
     try {
-      render(<CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={jest.fn()} />);
+      render(
+        <CatalogToolbar
+          filters={filters}
+          onChange={jest.fn()}
+          onCreate={jest.fn()}
+        />
+      );
 
-      await user.type(screen.getByRole('textbox', { name: /collection/i }), 'Mu');
+      await user.type(
+        screen.getByRole('textbox', { name: /collection/i }),
+        'Mu'
+      );
 
       await waitFor(() => {
         jest.advanceTimersByTime(300);
@@ -250,10 +322,16 @@ describe('CatalogToolbar', () => {
 
     try {
       const { rerender } = render(
-        <CatalogToolbar filters={filters} onChange={jest.fn()} onCreate={jest.fn()} />
+        <CatalogToolbar
+          filters={filters}
+          onChange={jest.fn()}
+          onCreate={jest.fn()}
+        />
       );
 
-      expect(screen.getByRole('textbox', { name: /car model/i })).toBeDisabled();
+      expect(
+        screen.getByRole('textbox', { name: /car model/i })
+      ).toBeDisabled();
 
       rerender(
         <CatalogToolbar
@@ -263,7 +341,10 @@ describe('CatalogToolbar', () => {
         />
       );
 
-      await user.type(screen.getByRole('textbox', { name: /car model/i }), 'Mu');
+      await user.type(
+        screen.getByRole('textbox', { name: /car model/i }),
+        'Mu'
+      );
 
       await waitFor(() => {
         jest.advanceTimersByTime(300);

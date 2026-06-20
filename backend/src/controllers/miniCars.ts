@@ -24,7 +24,9 @@ export async function createMiniCarHandler(req: Request, res: Response) {
 }
 
 export async function listMiniCarsHandler(req: Request, res: Response) {
-  const result = await listMiniCars(parseListQuery(req.query as Record<string, unknown>));
+  const result = await listMiniCars(
+    parseListQuery(req.query as Record<string, unknown>)
+  );
   res.json(result);
 }
 
@@ -59,7 +61,10 @@ export async function autocompleteBrandsHandler(req: Request, res: Response) {
   res.json({ items: await getBrandSuggestions(query) });
 }
 
-export async function autocompleteMiniBrandsHandler(req: Request, res: Response) {
+export async function autocompleteMiniBrandsHandler(
+  req: Request,
+  res: Response
+) {
   const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
 
   if (!query) {
@@ -70,7 +75,10 @@ export async function autocompleteMiniBrandsHandler(req: Request, res: Response)
   res.json({ items: await getMiniBrandSuggestions(query) });
 }
 
-export async function autocompleteCollectionsHandler(req: Request, res: Response) {
+export async function autocompleteCollectionsHandler(
+  req: Request,
+  res: Response
+) {
   const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
 
   if (!query) {
@@ -83,7 +91,8 @@ export async function autocompleteCollectionsHandler(req: Request, res: Response
 
 export async function autocompleteModelsHandler(req: Request, res: Response) {
   const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
-  const brand = typeof req.query.brand === 'string' ? req.query.brand.trim() : '';
+  const brand =
+    typeof req.query.brand === 'string' ? req.query.brand.trim() : '';
 
   if (!query || !brand) {
     res.json({ items: [] });

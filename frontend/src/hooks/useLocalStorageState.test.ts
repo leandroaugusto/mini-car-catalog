@@ -26,7 +26,9 @@ describe('useLocalStorageState', () => {
       result.current[1]('table');
     });
 
-    expect(window.localStorage.getItem('view-preference')).toBe(JSON.stringify('table'));
+    expect(window.localStorage.getItem('view-preference')).toBe(
+      JSON.stringify('table')
+    );
   });
 
   it('falls back to the default value when the stored value is invalid', () => {
@@ -34,7 +36,8 @@ describe('useLocalStorageState', () => {
 
     const { result } = renderHook(() =>
       useLocalStorageState<'table' | 'cards'>('view-preference', 'cards', {
-        isValid: (value): value is 'table' | 'cards' => value === 'table' || value === 'cards',
+        isValid: (value): value is 'table' | 'cards' =>
+          value === 'table' || value === 'cards',
       })
     );
 

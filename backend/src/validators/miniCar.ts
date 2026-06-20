@@ -31,7 +31,11 @@ export function validateMiniCarPayload(
   const miniScale = normalizeString(input.miniScale, 'Mini scale');
   const parsedYear = Number(input.carYear);
 
-  if (!Number.isInteger(parsedYear) || parsedYear < 1900 || parsedYear > currentYear) {
+  if (
+    !Number.isInteger(parsedYear) ||
+    parsedYear < 1900 ||
+    parsedYear > currentYear
+  ) {
     throw new HttpError(400, 'Car year must be a valid year');
   }
 
@@ -53,20 +57,32 @@ export function validateMiniCarPayload(
   };
 }
 
-export function parseListQuery(input: Record<string, unknown>): MiniCarListQuery {
+export function parseListQuery(
+  input: Record<string, unknown>
+): MiniCarListQuery {
   const page = Math.max(1, Number(input.page ?? 1) || 1);
-  const pageSize = Math.min(100, Math.max(1, Number(input.pageSize ?? 20) || 20));
+  const pageSize = Math.min(
+    100,
+    Math.max(1, Number(input.pageSize ?? 20) || 20)
+  );
   const sortBy = typeof input.sortBy === 'string' ? input.sortBy : 'createdAt';
   const sortOrder = input.sortOrder === 'asc' ? 'asc' : 'desc';
 
   return {
     search: typeof input.search === 'string' ? input.search.trim() : undefined,
-    carBrand: typeof input.carBrand === 'string' ? input.carBrand.trim() : undefined,
-    carModel: typeof input.carModel === 'string' ? input.carModel.trim() : undefined,
+    carBrand:
+      typeof input.carBrand === 'string' ? input.carBrand.trim() : undefined,
+    carModel:
+      typeof input.carModel === 'string' ? input.carModel.trim() : undefined,
     carYear: input.carYear ? Number(input.carYear) : undefined,
-    miniBrand: typeof input.miniBrand === 'string' ? input.miniBrand.trim() : undefined,
-    collection: typeof input.collection === 'string' ? input.collection.trim() : undefined,
-    miniScale: typeof input.miniScale === 'string' ? input.miniScale.trim() : undefined,
+    miniBrand:
+      typeof input.miniBrand === 'string' ? input.miniBrand.trim() : undefined,
+    collection:
+      typeof input.collection === 'string'
+        ? input.collection.trim()
+        : undefined,
+    miniScale:
+      typeof input.miniScale === 'string' ? input.miniScale.trim() : undefined,
     sortBy,
     sortOrder,
     page,

@@ -58,7 +58,12 @@ describe('errorHandler', () => {
   it('returns 500 for unknown non-Error values', () => {
     const response = createResponseMock();
 
-    errorHandler('unexpected' as never, {} as never, response as never, jest.fn());
+    errorHandler(
+      'unexpected' as never,
+      {} as never,
+      response as never,
+      jest.fn()
+    );
 
     expect(response.status).toHaveBeenCalledWith(500);
     expect(response.json).toHaveBeenCalledWith({

@@ -18,20 +18,27 @@ jest.mock('../storage/objectStorage', () => ({
 }));
 
 jest.mock('../utils/imageProcessing', () => ({
-  optimizeUploadedImage: jest.fn(async (input: {
-    buffer: Buffer;
-    originalName: string;
-    contentType: string;
-  }) => ({
-    buffer: input.buffer,
-    originalName: input.originalName,
-    contentType: input.contentType,
-  })),
+  optimizeUploadedImage: jest.fn(
+    async (input: {
+      buffer: Buffer;
+      originalName: string;
+      contentType: string;
+    }) => ({
+      buffer: input.buffer,
+      originalName: input.originalName,
+      contentType: input.contentType,
+    })
+  ),
 }));
 
 import { MiniCar } from '../models/miniCar';
 import { deleteObject, uploadObject } from '../storage/objectStorage';
-import { createMiniCar, getMiniCarById, listMiniCars, updateMiniCar } from './miniCars';
+import {
+  createMiniCar,
+  getMiniCarById,
+  listMiniCars,
+  updateMiniCar,
+} from './miniCars';
 
 function createMiniCarDoc(overrides: Partial<Record<string, unknown>> = {}) {
   const doc: Record<string, unknown> = {
@@ -141,7 +148,9 @@ describe('miniCars service', () => {
   it('throws when a mini car cannot be found by id', async () => {
     mockedMiniCar.findById.mockResolvedValue(null);
 
-    await expect(getMiniCarById('missing-id')).rejects.toThrow('Mini car not found');
+    await expect(getMiniCarById('missing-id')).rejects.toThrow(
+      'Mini car not found'
+    );
   });
 
   it('deletes the uploaded object if creating the record fails', async () => {
@@ -169,7 +178,9 @@ describe('miniCars service', () => {
       )
     ).rejects.toThrow('create failed');
 
-    expect(mockedDeleteObject).toHaveBeenCalledWith('mini-cars/new-upload.webp');
+    expect(mockedDeleteObject).toHaveBeenCalledWith(
+      'mini-cars/new-upload.webp'
+    );
   });
 
   it('deletes the replacement object if saving an update fails', async () => {

@@ -1,7 +1,11 @@
 import path from 'path';
 
 import { MiniCar, MiniCarDocument } from '../models/miniCar';
-import { buildPhotoUrl, deleteObject, uploadObject } from '../storage/objectStorage';
+import {
+  buildPhotoUrl,
+  deleteObject,
+  uploadObject,
+} from '../storage/objectStorage';
 import { MiniCarListQuery, MiniCarPayload } from '../types/miniCar';
 import { escapeRegex } from '../utils/files';
 import { optimizeUploadedImage } from '../utils/imageProcessing';
@@ -121,7 +125,9 @@ export async function listMiniCars(query: MiniCarListQuery) {
   ]);
 
   return {
-    items: items.map((item) => serializeMiniCar(item.toObject() as MiniCarDocument)),
+    items: items.map((item) =>
+      serializeMiniCar(item.toObject() as MiniCarDocument)
+    ),
     pagination: {
       page: query.page,
       pageSize: query.pageSize,

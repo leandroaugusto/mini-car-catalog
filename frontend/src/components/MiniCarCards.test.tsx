@@ -30,7 +30,12 @@ describe('MiniCarCards', () => {
     const yearLabels = screen.getAllByText('1967');
 
     expect(yearLabels).toHaveLength(1);
-    expect(yearLabels[0]).toHaveClass('absolute', 'bottom-4', 'left-4', 'text-sm');
+    expect(yearLabels[0]).toHaveClass(
+      'absolute',
+      'bottom-4',
+      'left-4',
+      'text-sm'
+    );
   });
 
   it('renders the scale chip without the word scale', () => {
@@ -119,16 +124,24 @@ describe('MiniCarCards', () => {
     const imageArea = image.parentElement;
 
     expect(imageArea).not.toBeNull();
-    expect(within(imageArea as HTMLElement).getByRole('button', { name: /edit/i })).toBeInTheDocument();
+    expect(
+      within(imageArea as HTMLElement).getByRole('button', { name: /edit/i })
+    ).toBeInTheDocument();
     expect(
       within(imageArea as HTMLElement).getByRole('button', { name: /delete/i })
     ).toBeInTheDocument();
 
     const detailsPanel = screen.getByText(/ford mustang/i).closest('div');
     expect(detailsPanel).not.toBeNull();
-    expect(within(detailsPanel as HTMLElement).queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
     expect(
-      within(detailsPanel as HTMLElement).queryByRole('button', { name: /delete/i })
+      within(detailsPanel as HTMLElement).queryByRole('button', {
+        name: /edit/i,
+      })
+    ).not.toBeInTheDocument();
+    expect(
+      within(detailsPanel as HTMLElement).queryByRole('button', {
+        name: /delete/i,
+      })
     ).not.toBeInTheDocument();
   });
 });

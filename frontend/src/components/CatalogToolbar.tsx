@@ -16,13 +16,25 @@ interface CatalogToolbarProps {
   onCreate: () => void;
 }
 
-const MINI_SCALE_OPTIONS = ['1:87', '1:64', '1:43', '1:32', '1:24', '1:18'] as const;
+const MINI_SCALE_OPTIONS = [
+  '1:87',
+  '1:64',
+  '1:43',
+  '1:32',
+  '1:24',
+  '1:18',
+] as const;
 
-export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarProps) {
+export function CatalogToolbar({
+  filters,
+  onChange,
+  onCreate,
+}: CatalogToolbarProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(true);
   const inputClassName =
     'w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-slate-400 focus:ring-2 focus:ring-slate-200';
-  const labelClassName = 'mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-slate-500';
+  const labelClassName =
+    'mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-slate-500';
   const clearButtonClassName =
     'absolute inset-y-0 right-3 my-auto inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-700';
 
@@ -72,9 +84,12 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
               Actions
             </p>
-            <h2 className="mt-2 text-xl font-semibold text-slate-900">Manage collection</h2>
+            <h2 className="mt-2 text-xl font-semibold text-slate-900">
+              Manage collection
+            </h2>
             <p className="mt-1 text-sm text-slate-500">
-              Add a new mini car to your showroom whenever you find your next piece.
+              Add a new mini car to your showroom whenever you find your next
+              piece.
             </p>
           </div>
           <button
@@ -120,7 +135,10 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
         </button>
 
         {filtersExpanded ? (
-          <div id="catalog-filters-panel" className="border-t border-slate-100 px-6 pb-6 pt-5">
+          <div
+            id="catalog-filters-panel"
+            className="border-t border-slate-100 px-6 pb-6 pt-5"
+          >
             <div className="grid gap-4 lg:grid-cols-2">
               <div className="lg:col-span-2">
                 {renderTextInput(
@@ -138,7 +156,9 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
                 label="Car Brand"
                 value={filters.carBrand}
                 onBlur={() => undefined}
-                onChange={(value) => onChange({ carBrand: value, carModel: '' })}
+                onChange={(value) =>
+                  onChange({ carBrand: value, carModel: '' })
+                }
                 fetchSuggestions={fetchBrandSuggestions}
                 placeholder="Ferrari, Ford, Porsche..."
               />
@@ -150,7 +170,9 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
                 value={filters.carModel}
                 onBlur={() => undefined}
                 onChange={(value) => onChange({ carModel: value })}
-                fetchSuggestions={(query) => fetchModelSuggestions(query, filters.carBrand)}
+                fetchSuggestions={(query) =>
+                  fetchModelSuggestions(query, filters.carBrand)
+                }
                 disabled={!filters.carBrand}
                 placeholder="Mustang, 911 Turbo..."
               />
@@ -197,7 +219,9 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
                   id="miniScaleFilter"
                   value={filters.miniScale}
                   className={inputClassName}
-                  onChange={(event) => onChange({ miniScale: event.target.value })}
+                  onChange={(event) =>
+                    onChange({ miniScale: event.target.value })
+                  }
                 >
                   <option value="">All scales</option>
                   {MINI_SCALE_OPTIONS.map((scaleOption) => (
@@ -217,9 +241,12 @@ export function CatalogToolbar({ filters, onChange, onCreate }: CatalogToolbarPr
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">
             Catalog Display
           </p>
-          <h2 className="mt-2 text-xl font-semibold text-slate-900">Catalog Display</h2>
+          <h2 className="mt-2 text-xl font-semibold text-slate-900">
+            Catalog Display
+          </h2>
           <p className="mt-1 text-sm text-slate-500">
-            Control how your catalog is ordered and how many items appear per page.
+            Control how your catalog is ordered and how many items appear per
+            page.
           </p>
         </div>
 

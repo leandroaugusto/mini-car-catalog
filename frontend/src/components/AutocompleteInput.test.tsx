@@ -148,12 +148,17 @@ describe('AutocompleteInput', () => {
       />
     );
 
-    await user.type(screen.getByRole('textbox', { name: /mini brand/i }), 'Hot Wheels');
+    await user.type(
+      screen.getByRole('textbox', { name: /mini brand/i }),
+      'Hot Wheels'
+    );
 
     await user.click(screen.getByRole('button', { name: /clear mini brand/i }));
 
     expect(onChange).toHaveBeenLastCalledWith('');
-    expect(screen.getByRole('textbox', { name: /mini brand/i })).toHaveValue('');
+    expect(screen.getByRole('textbox', { name: /mini brand/i })).toHaveValue(
+      ''
+    );
   });
 
   it('does not fetch suggestions on mount for prefilled values', async () => {

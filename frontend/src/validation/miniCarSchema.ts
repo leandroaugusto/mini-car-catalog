@@ -2,7 +2,7 @@ import { mixed, number, object, string } from 'yup';
 
 const MINI_SCALE_OPTIONS = ['1:64', '1:32', '1:43', '1:24', '1:18', '1:87'];
 
-export function createMiniCarSchema(mode: 'create' | 'edit') {
+export function createMiniCarSchema(_mode: 'create' | 'edit') {
   return object({
     carBrand: string().trim().required('Car brand is required'),
     carModel: string().trim().required('Car model is required'),

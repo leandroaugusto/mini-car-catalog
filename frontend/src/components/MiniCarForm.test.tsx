@@ -31,11 +31,9 @@ describe('MiniCarForm', () => {
     await user.upload(fileInput, file);
 
     expect(createObjectURL).toHaveBeenCalledWith(file);
-    expect(screen.getByRole('img', { name: /current mini car/i })).toHaveAttribute(
-      'src',
-      'blob:preview-image'
-    );
-
+    expect(
+      screen.getByRole('img', { name: /current mini car/i })
+    ).toHaveAttribute('src', 'blob:preview-image');
   });
 
   it('renders mini scale as a dropdown with preset options', () => {
@@ -88,13 +86,17 @@ describe('MiniCarForm', () => {
 
       const yearInput = screen.getByRole('textbox', { name: /car year/i });
 
-      expect(screen.queryByRole('spinbutton', { name: /car year/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('spinbutton', { name: /car year/i })
+      ).not.toBeInTheDocument();
 
       await user.type(yearInput, '190');
 
       await waitFor(() => {
         jest.advanceTimersByTime(300);
-        expect(screen.getByRole('button', { name: '1900' })).toBeInTheDocument();
+        expect(
+          screen.getByRole('button', { name: '1900' })
+        ).toBeInTheDocument();
       });
 
       expect(
@@ -128,9 +130,13 @@ describe('MiniCarForm', () => {
     });
 
     expect(screen.getByText(/car model is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/car year must be a valid year/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/car year must be a valid year/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(/mini brand is required/i)).toBeInTheDocument();
-    expect(screen.getByText(/mini scale must use the format 1:64/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/mini scale must use the format 1:64/i)
+    ).toBeInTheDocument();
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
@@ -150,11 +156,20 @@ describe('MiniCarForm', () => {
       />
     );
 
-    await user.type(screen.getByRole('textbox', { name: /car brand/i }), 'Ferrari');
+    await user.type(
+      screen.getByRole('textbox', { name: /car brand/i }),
+      'Ferrari'
+    );
     await user.type(screen.getByRole('textbox', { name: /car model/i }), 'F40');
     await user.type(screen.getByRole('textbox', { name: /car year/i }), '1987');
-    await user.type(screen.getByRole('textbox', { name: /mini brand/i }), 'Hot Wheels');
-    await user.selectOptions(screen.getByRole('combobox', { name: /mini scale/i }), '1:64');
+    await user.type(
+      screen.getByRole('textbox', { name: /mini brand/i }),
+      'Hot Wheels'
+    );
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /mini scale/i }),
+      '1:64'
+    );
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
@@ -182,10 +197,14 @@ describe('MiniCarForm', () => {
           photo: null,
           photoUrl: '/uploads/mustang.png',
         }}
-        fetchBrandSuggestions={jest.fn().mockResolvedValue(['Ford', 'Chevrolet'])}
+        fetchBrandSuggestions={jest
+          .fn()
+          .mockResolvedValue(['Ford', 'Chevrolet'])}
         fetchModelSuggestions={jest.fn().mockResolvedValue(['Mustang'])}
         fetchMiniBrandSuggestions={jest.fn().mockResolvedValue(['Hot Wheels'])}
-        fetchCollectionSuggestions={jest.fn().mockResolvedValue(['Muscle Cars'])}
+        fetchCollectionSuggestions={jest
+          .fn()
+          .mockResolvedValue(['Muscle Cars'])}
       />
     );
 
@@ -251,7 +270,10 @@ describe('MiniCarForm', () => {
         />
       );
 
-      await user.type(screen.getByRole('textbox', { name: /collection/i }), 'Mu');
+      await user.type(
+        screen.getByRole('textbox', { name: /collection/i }),
+        'Mu'
+      );
 
       expect(fetchCollectionSuggestions).not.toHaveBeenCalled();
 
@@ -306,8 +328,12 @@ describe('MiniCarForm', () => {
             }}
             fetchBrandSuggestions={jest.fn().mockResolvedValue(['Plymouth'])}
             fetchModelSuggestions={fetchModelSuggestions}
-            fetchMiniBrandSuggestions={jest.fn().mockResolvedValue(['Johnny Lightning'])}
-            fetchCollectionSuggestions={jest.fn().mockResolvedValue(['Movie Cars'])}
+            fetchMiniBrandSuggestions={jest
+              .fn()
+              .mockResolvedValue(['Johnny Lightning'])}
+            fetchCollectionSuggestions={jest
+              .fn()
+              .mockResolvedValue(['Movie Cars'])}
           />
         </StrictMode>
       );

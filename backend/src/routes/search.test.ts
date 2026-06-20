@@ -79,7 +79,11 @@ describe('mini car search and autocomplete API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items).toHaveLength(2);
-    expect(response.body.items.every((item: { collection?: string }) => item.collection === 'Muscle Cars')).toBe(true);
+    expect(
+      response.body.items.every(
+        (item: { collection?: string }) => item.collection === 'Muscle Cars'
+      )
+    ).toBe(true);
   });
 
   it('returns distinct brand suggestions matching the query', async () => {
@@ -108,7 +112,9 @@ describe('mini car search and autocomplete API', () => {
   it('returns distinct mini brand suggestions matching the query', async () => {
     await seedCars();
 
-    const response = await request(app).get('/api/autocomplete/mini-brands?q=ho');
+    const response = await request(app).get(
+      '/api/autocomplete/mini-brands?q=ho'
+    );
 
     expect(response.status).toBe(200);
     expect(response.body.items).toEqual(['Hot Wheels']);
@@ -131,7 +137,9 @@ describe('mini car search and autocomplete API', () => {
   it('returns distinct collection suggestions matching the query', async () => {
     await seedCars();
 
-    const response = await request(app).get('/api/autocomplete/collections?q=mus');
+    const response = await request(app).get(
+      '/api/autocomplete/collections?q=mus'
+    );
 
     expect(response.status).toBe(200);
     expect(response.body.items).toEqual(['Muscle Cars']);
@@ -163,8 +171,12 @@ describe('mini car search and autocomplete API', () => {
   });
 
   it('returns an empty list when model suggestions are missing brand or query', async () => {
-    const missingBrand = await request(app).get('/api/autocomplete/models?q=mu');
-    const missingQuery = await request(app).get('/api/autocomplete/models?brand=Ford');
+    const missingBrand = await request(app).get(
+      '/api/autocomplete/models?q=mu'
+    );
+    const missingQuery = await request(app).get(
+      '/api/autocomplete/models?brand=Ford'
+    );
 
     expect(missingBrand.status).toBe(200);
     expect(missingBrand.body.items).toEqual([]);

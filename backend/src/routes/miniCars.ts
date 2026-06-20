@@ -23,5 +23,9 @@ miniCarRouter.get('/autocomplete/models', autocompleteModelsHandler);
 miniCarRouter.get('/minicars', listMiniCarsHandler);
 miniCarRouter.get('/minicars/:id', getMiniCarHandler);
 miniCarRouter.post('/minicars', upload.single('photo'), createMiniCarHandler);
-miniCarRouter.put('/minicars/:id', upload.single('photo'), updateMiniCarHandler);
+miniCarRouter.put(
+  '/minicars/:id',
+  upload.single('photo'),
+  updateMiniCarHandler
+);
 miniCarRouter.delete('/minicars/:id', deleteMiniCarHandler);

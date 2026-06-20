@@ -1,11 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export const allowedMimeTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/webp',
-];
+export const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
 export function getUploadDir() {
   return process.env.UPLOAD_DIR

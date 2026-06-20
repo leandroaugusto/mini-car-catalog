@@ -1,6 +1,9 @@
 const API_BASE_URL = 'http://localhost:5001/api';
 
-export async function requestJson<T>(input: string, init?: RequestInit): Promise<T> {
+export async function requestJson<T>(
+  input: string,
+  init?: RequestInit
+): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${input}`, init);
 
   if (!response.ok) {

@@ -117,7 +117,9 @@ describe('mini car CRUD API', () => {
 
   it('updates a record and replaces the image when a new file is uploaded', async () => {
     const originalImagePath = await createImageFixture('update-original.png');
-    const replacementImagePath = await createImageFixture('update-replacement.png');
+    const replacementImagePath = await createImageFixture(
+      'update-replacement.png'
+    );
 
     const createResponse = await request(app)
       .post('/api/minicars')
@@ -144,7 +146,9 @@ describe('mini car CRUD API', () => {
     expect(response.status).toBe(200);
     expect(response.body.item.carModel).toBe('M3 Sport Evolution');
     expect(response.body.item.collection).toBe('Legends');
-    expect(response.body.item.photoKey).toBe('mini-cars/update-replacement.webp');
+    expect(response.body.item.photoKey).toBe(
+      'mini-cars/update-replacement.webp'
+    );
     expect(response.body.item.photoKey).not.toBe(originalPhotoKey);
     expect(storage.deleteObject).toHaveBeenCalledWith(originalPhotoKey);
   });

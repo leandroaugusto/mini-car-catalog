@@ -1,4 +1,4 @@
-name: Tests
+name: CI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   backend-tests:
-    name: Backend Tests
+    name: Backend CI
     runs-on: ubuntu-latest
 
     steps:
@@ -24,12 +24,20 @@ jobs:
         working-directory: backend
         run: npm ci
 
+      - name: Run backend lint
+        working-directory: backend
+        run: npm run lint
+
+      - name: Run backend format check
+        working-directory: backend
+        run: npm run format:check
+
       - name: Run backend tests
         working-directory: backend
         run: npm test
 
   frontend-tests:
-    name: Frontend Tests
+    name: Frontend CI
     runs-on: ubuntu-latest
 
     steps:
@@ -46,6 +54,14 @@ jobs:
       - name: Install frontend dependencies
         working-directory: frontend
         run: npm ci
+
+      - name: Run frontend lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Run frontend format check
+        working-directory: frontend
+        run: npm run format:check
 
       - name: Run frontend tests
         working-directory: frontend

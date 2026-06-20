@@ -49,7 +49,8 @@ async function optimizeExistingR2Photos() {
       continue;
     }
 
-    const originalName = record.photoOriginalName ?? path.basename(record.photoKey);
+    const originalName =
+      record.photoOriginalName ?? path.basename(record.photoKey);
     const contentType = guessMimeTypeFromKey(record.photoKey);
     const originalBuffer = await downloadObject(record.photoKey);
     const optimizedImage = await optimizeUploadedImage({
@@ -70,7 +71,9 @@ async function optimizeExistingR2Photos() {
     console.log(`Optimized ${record._id.toString()} -> ${record.photoKey}`);
   }
 
-  console.log(`Optimization complete. Optimized: ${optimized}. Skipped: ${skipped}.`);
+  console.log(
+    `Optimization complete. Optimized: ${optimized}. Skipped: ${skipped}.`
+  );
 }
 
 void optimizeExistingR2Photos()

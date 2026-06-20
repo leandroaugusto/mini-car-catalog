@@ -40,9 +40,14 @@ const ALLOWED_SORT_FIELDS = new Set([
   'miniScale',
 ]);
 
-type DisplayPreferences = Pick<MiniCarFilters, 'sortBy' | 'sortOrder' | 'pageSize'>;
+type DisplayPreferences = Pick<
+  MiniCarFilters,
+  'sortBy' | 'sortOrder' | 'pageSize'
+>;
 
-function isValidDisplayPreferences(value: unknown): value is DisplayPreferences {
+function isValidDisplayPreferences(
+  value: unknown
+): value is DisplayPreferences {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
@@ -53,22 +58,26 @@ function isValidDisplayPreferences(value: unknown): value is DisplayPreferences 
     typeof candidate.sortBy === 'string' &&
     ALLOWED_SORT_FIELDS.has(candidate.sortBy) &&
     (candidate.sortOrder === 'asc' || candidate.sortOrder === 'desc') &&
-    (candidate.pageSize === 20 || candidate.pageSize === 50 || candidate.pageSize === 100)
+    (candidate.pageSize === 20 ||
+      candidate.pageSize === 50 ||
+      candidate.pageSize === 100)
   );
 }
 
 export function useMiniCars() {
-  const [displayPreferences, setDisplayPreferences] = useLocalStorageState<DisplayPreferences>(
-    DISPLAY_PREFERENCES_KEY,
-    DEFAULT_DISPLAY_PREFERENCES,
-    { isValid: isValidDisplayPreferences }
-  );
+  const [displayPreferences, setDisplayPreferences] =
+    useLocalStorageState<DisplayPreferences>(
+      DISPLAY_PREFERENCES_KEY,
+      DEFAULT_DISPLAY_PREFERENCES,
+      { isValid: isValidDisplayPreferences }
+    );
   const [items, setItems] = useState<MiniCar[]>([]);
   const [filters, setFiltersState] = useState<MiniCarFilters>(() => ({
     ...initialFilters,
     ...displayPreferences,
   }));
-  const [pagination, setPagination] = useState<PaginationState>(initialPagination);
+  const [pagination, setPagination] =
+    useState<PaginationState>(initialPagination);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshToken, setRefreshToken] = useState(0);
@@ -85,7 +94,13 @@ export function useMiniCars() {
         pageSize: filters.pageSize,
       });
     }
-  }, [displayPreferences, filters.pageSize, filters.sortBy, filters.sortOrder, setDisplayPreferences]);
+  }, [
+    displayPreferences,
+    filters.pageSize,
+    filters.sortBy,
+    filters.sortOrder,
+    setDisplayPreferences,
+  ]);
 
   useEffect(() => {
     let cancelled = false;
@@ -104,7 +119,9 @@ export function useMiniCars() {
       } catch (requestError) {
         if (!cancelled) {
           setError(
-            requestError instanceof Error ? requestError.message : 'Failed to load catalog'
+            requestError instanceof Error
+              ? requestError.message
+              : 'Failed to load catalog'
           );
         }
       } finally {
@@ -121,16 +138,13 @@ export function useMiniCars() {
     };
   }, [filters, refreshToken]);
 
-  const setFilters = useCallback(
-    (nextFilters: Partial<MiniCarFilters>) => {
-      setFiltersState((current) => ({
-        ...current,
-        ...nextFilters,
-        page: nextFilters.page ?? 1,
-      }));
-    },
-    []
-  );
+  const setFilters = useCallback((nextFilters: Partial<MiniCarFilters>) => {
+    setFiltersState((current) => ({
+      ...current,
+      ...nextFilters,
+      page: nextFilters.page ?? 1,
+    }));
+  }, []);
 
   const refresh = useCallback(() => {
     setRefreshToken((current) => current + 1);

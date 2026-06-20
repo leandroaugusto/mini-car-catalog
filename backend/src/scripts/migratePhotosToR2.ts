@@ -104,7 +104,9 @@ async function migratePhotosToR2() {
     console.log(`Migrated ${record._id.toString()} -> ${photoKey}`);
   }
 
-  console.log(`Migration complete. Migrated: ${migrated}. Skipped: ${skipped}.`);
+  console.log(
+    `Migration complete. Migrated: ${migrated}. Skipped: ${skipped}.`
+  );
 }
 
 void migratePhotosToR2()
