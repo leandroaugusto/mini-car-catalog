@@ -15,7 +15,12 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
 });
 
-app.use((error: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+export function errorHandler(
+  error: unknown,
+  _req: express.Request,
+  res: express.Response,
+  _next: express.NextFunction
+) {
   if (error instanceof multer.MulterError) {
     const statusCode = error.code === 'LIMIT_FILE_SIZE' ? 413 : 400;
     res.status(statusCode).json({ error: { message: error.message } });
@@ -33,4 +38,6 @@ app.use((error: unknown, _req: express.Request, res: express.Response, _next: ex
   }
 
   res.status(500).json({ error: { message: 'Internal server error' } });
-});
+}
+
+app.use(errorHandler);

@@ -91,6 +91,13 @@ describe('mini car search and autocomplete API', () => {
     expect(response.body.items).toEqual(['Ford']);
   });
 
+  it('returns an empty list when the brand autocomplete query is blank', async () => {
+    const response = await request(app).get('/api/autocomplete/brands?q=');
+
+    expect(response.status).toBe(200);
+    expect(response.body.items).toEqual([]);
+  });
+
   it('returns distinct mini brand suggestions matching the query', async () => {
     await seedCars();
 
@@ -98,6 +105,13 @@ describe('mini car search and autocomplete API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items).toEqual(['Hot Wheels']);
+  });
+
+  it('returns an empty list when the mini brand autocomplete query is blank', async () => {
+    const response = await request(app).get('/api/autocomplete/mini-brands?q=');
+
+    expect(response.status).toBe(200);
+    expect(response.body.items).toEqual([]);
   });
 
   it('returns distinct collection suggestions matching the query', async () => {
@@ -109,6 +123,13 @@ describe('mini car search and autocomplete API', () => {
     expect(response.body.items).toEqual(['Muscle Cars']);
   });
 
+  it('returns an empty list when the collection autocomplete query is blank', async () => {
+    const response = await request(app).get('/api/autocomplete/collections?q=');
+
+    expect(response.status).toBe(200);
+    expect(response.body.items).toEqual([]);
+  });
+
   it('filters model suggestions by brand', async () => {
     await seedCars();
 
@@ -118,5 +139,15 @@ describe('mini car search and autocomplete API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.items).toEqual(['Mustang']);
+  });
+
+  it('returns an empty list when model suggestions are missing brand or query', async () => {
+    const missingBrand = await request(app).get('/api/autocomplete/models?q=mu');
+    const missingQuery = await request(app).get('/api/autocomplete/models?brand=Ford');
+
+    expect(missingBrand.status).toBe(200);
+    expect(missingBrand.body.items).toEqual([]);
+    expect(missingQuery.status).toBe(200);
+    expect(missingQuery.body.items).toEqual([]);
   });
 });

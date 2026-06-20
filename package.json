@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "backup:db": "bash scripts/create-db-backup.sh",
-    "restore:db": "bash scripts/restore-db-backup.sh"
+    "restore:db": "bash scripts/restore-db-backup.sh",
+    "test:coverage": "npm --prefix backend run test:coverage && npm --prefix frontend run test:coverage"
   }
 }
