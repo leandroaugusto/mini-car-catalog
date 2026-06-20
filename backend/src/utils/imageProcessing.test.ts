@@ -31,6 +31,27 @@ describe('optimizeUploadedImage', () => {
     expect(result.buffer.byteLength).toBeLessThan(inputBuffer.byteLength);
   });
 
+  it('adds a webp extension when the uploaded file has no extension', async () => {
+    const inputBuffer = await sharp({
+      create: {
+        width: 1200,
+        height: 800,
+        channels: 3,
+        background: { r: 150, g: 150, b: 150 },
+      },
+    })
+      .jpeg({ quality: 100 })
+      .toBuffer();
+
+    const result = await optimizeUploadedImage({
+      buffer: inputBuffer,
+      originalName: 'upload',
+      contentType: 'image/jpeg',
+    });
+
+    expect(result.originalName).toBe('upload.webp');
+  });
+
   it('can preserve the original jpeg format for in-place rewrites', async () => {
     const inputBuffer = await sharp({
       create: {

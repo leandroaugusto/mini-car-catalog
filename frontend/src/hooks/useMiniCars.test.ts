@@ -125,6 +125,57 @@ describe('useMiniCars', () => {
       );
     });
   });
+
+  it('sets a fallback error message when the request rejects with a non-Error value', async () => {
+    mockedFetchMiniCars.mockReset().mockRejectedValue('broken');
+
+    const { result } = renderHook(() => useMiniCars());
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.error).toBe('Failed to load catalog');
+  });
+
+  it('refreshes by triggering another fetch', async () => {
+    const { result } = renderHook(() => useMiniCars());
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(mockedFetchMiniCars).toHaveBeenCalledTimes(1);
+
+    act(() => {
+      result.current.refresh();
+    });
+
+    await waitFor(() => {
+      expect(mockedFetchMiniCars).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  it('resets to page one when filters change without an explicit page', async () => {
+    const { result } = renderHook(() => useMiniCars());
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    act(() => {
+      result.current.setFilters({ page: 4 });
+    });
+
+    expect(result.current.filters.page).toBe(4);
+
+    act(() => {
+      result.current.setFilters({ search: 'Mustang' });
+    });
+
+    expect(result.current.filters.search).toBe('Mustang');
+    expect(result.current.filters.page).toBe(1);
+  });
 });
 
 afterAll(() => {

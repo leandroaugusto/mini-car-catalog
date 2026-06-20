@@ -109,6 +109,35 @@ describe('miniCars service', () => {
     });
   });
 
+  it('applies additional filters and falls back to createdAt for invalid sort fields', async () => {
+    const item = createMiniCarDoc();
+    const limit = jest.fn().mockResolvedValue([item]);
+    const skip = jest.fn().mockReturnValue({ limit });
+    const sort = jest.fn().mockReturnValue({ skip });
+
+    mockedMiniCar.find.mockReturnValue({ sort });
+    mockedMiniCar.countDocuments.mockResolvedValue(1);
+
+    await listMiniCars({
+      carYear: 1967,
+      miniBrand: 'Hot Wheels',
+      collection: 'Muscle Cars',
+      miniScale: '1:64',
+      page: 1,
+      pageSize: 10,
+      sortBy: 'unknown',
+      sortOrder: 'asc',
+    });
+
+    expect(mockedMiniCar.find).toHaveBeenCalledWith({
+      carYear: 1967,
+      miniBrand: 'Hot Wheels',
+      collectionName: 'Muscle Cars',
+      miniScale: '1:64',
+    });
+    expect(sort).toHaveBeenCalledWith({ createdAt: 1 });
+  });
+
   it('throws when a mini car cannot be found by id', async () => {
     mockedMiniCar.findById.mockResolvedValue(null);
 
@@ -176,5 +205,28 @@ describe('miniCars service', () => {
     ).rejects.toThrow('save failed');
 
     expect(mockedDeleteObject).toHaveBeenCalledWith('mini-cars/new-photo.webp');
+  });
+
+  it('updates a mini car without touching object storage when no file is provided', async () => {
+    const document = createMiniCarDoc({
+      photoKey: 'mini-cars/original-photo.webp',
+      photoOriginalName: 'original-photo.webp',
+    });
+
+    (document.save as jest.Mock).mockResolvedValue(undefined);
+    mockedMiniCar.findById.mockResolvedValue(document);
+
+    const result = await updateMiniCar('mini-car-id', {
+      carBrand: 'BMW',
+      carModel: 'M3 Evo',
+      carYear: 1990,
+      miniBrand: 'Auto World',
+      collection: 'Legends',
+      miniScale: '1:64',
+    });
+
+    expect(mockedUploadObject).not.toHaveBeenCalled();
+    expect(mockedDeleteObject).not.toHaveBeenCalled();
+    expect(result.photoKey).toBe('mini-cars/original-photo.webp');
   });
 });

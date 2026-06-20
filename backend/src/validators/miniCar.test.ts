@@ -82,4 +82,13 @@ describe('validateMiniCarPayload', () => {
 
     expect(payload.collection).toBeUndefined();
   });
+
+  it('rejects missing required string fields', () => {
+    expect(() =>
+      validateMiniCarPayload(
+        { ...validPayload, carBrand: 123 as unknown as string },
+        { photoRequired: false, hasPhoto: false }
+      )
+    ).toThrow(new HttpError(400, 'Car brand is required'));
+  });
 });

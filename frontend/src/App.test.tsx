@@ -194,4 +194,88 @@ describe('App', () => {
 
     expect(setFilters).toHaveBeenCalledWith({ page: 4 });
   });
+
+  it('renders an error alert when the catalog fails to load', () => {
+    mockCatalogState({
+      items: [],
+      error: 'Failed to load catalog',
+    });
+
+    render(<App />);
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Failed to load catalog');
+  });
+
+  it('renders loading skeletons while the catalog is loading', () => {
+    mockCatalogState({
+      items: [],
+      loading: true,
+    });
+
+    render(<App />);
+
+    expect(screen.getAllByText((_, element) => element?.className.includes('animate-pulse') ?? false).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  });
+
+  it('renders the empty state and opens the create form from it', async () => {
+    const user = userEvent.setup();
+
+    mockCatalogState({
+      items: [],
+      pagination: {
+        page: 1,
+        pageSize: 20,
+        totalItems: 0,
+        totalPages: 1,
+      },
+    });
+
+    render(<App />);
+
+    expect(
+      screen.getByRole('heading', { name: /your showroom is ready for its first mini car/i })
+    ).toBeInTheDocument();
+
+    const addButtons = screen.getAllByRole('button', { name: /add mini car/i });
+    await user.click(addButtons[1]);
+
+    expect(screen.getByRole('heading', { name: /add a new mini car/i })).toBeInTheDocument();
+  });
+
+  it('navigates with previous and next pagination buttons', async () => {
+    const user = userEvent.setup();
+    const setFilters = jest.fn();
+
+    mockCatalogState({
+      filters: {
+        search: '',
+        carBrand: '',
+        carModel: '',
+        carYear: '',
+        miniBrand: '',
+        collection: '',
+        miniScale: '',
+        sortBy: 'createdAt',
+        sortOrder: 'desc',
+        page: 2,
+        pageSize: 20,
+      },
+      pagination: {
+        page: 2,
+        pageSize: 20,
+        totalItems: 90,
+        totalPages: 5,
+      },
+      setFilters,
+    });
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: /previous/i }));
+    await user.click(screen.getByRole('button', { name: /next/i }));
+
+    expect(setFilters).toHaveBeenNthCalledWith(1, { page: 1 });
+    expect(setFilters).toHaveBeenNthCalledWith(2, { page: 3 });
+  });
 });

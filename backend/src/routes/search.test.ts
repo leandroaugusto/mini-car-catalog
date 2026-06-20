@@ -98,6 +98,13 @@ describe('mini car search and autocomplete API', () => {
     expect(response.body.items).toEqual([]);
   });
 
+  it('returns an empty list when the brand autocomplete query is missing', async () => {
+    const response = await request(app).get('/api/autocomplete/brands');
+
+    expect(response.status).toBe(200);
+    expect(response.body.items).toEqual([]);
+  });
+
   it('returns distinct mini brand suggestions matching the query', async () => {
     await seedCars();
 
@@ -114,6 +121,13 @@ describe('mini car search and autocomplete API', () => {
     expect(response.body.items).toEqual([]);
   });
 
+  it('returns an empty list when the mini brand autocomplete query is missing', async () => {
+    const response = await request(app).get('/api/autocomplete/mini-brands');
+
+    expect(response.status).toBe(200);
+    expect(response.body.items).toEqual([]);
+  });
+
   it('returns distinct collection suggestions matching the query', async () => {
     await seedCars();
 
@@ -125,6 +139,13 @@ describe('mini car search and autocomplete API', () => {
 
   it('returns an empty list when the collection autocomplete query is blank', async () => {
     const response = await request(app).get('/api/autocomplete/collections?q=');
+
+    expect(response.status).toBe(200);
+    expect(response.body.items).toEqual([]);
+  });
+
+  it('returns an empty list when the collection autocomplete query is missing', async () => {
+    const response = await request(app).get('/api/autocomplete/collections');
 
     expect(response.status).toBe(200);
     expect(response.body.items).toEqual([]);
