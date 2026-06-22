@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 import {
   fetchBrandSuggestions,
@@ -14,6 +14,7 @@ interface CatalogToolbarProps {
   filters: MiniCarFilters;
   onChange: (changes: Partial<MiniCarFilters>) => void;
   onCreate: () => void;
+  formContent?: ReactNode;
 }
 
 const MINI_SCALE_OPTIONS = [
@@ -29,6 +30,7 @@ export function CatalogToolbar({
   filters,
   onChange,
   onCreate,
+  formContent,
 }: CatalogToolbarProps) {
   const [filtersExpanded, setFiltersExpanded] = useState(true);
   const inputClassName =
@@ -104,6 +106,8 @@ export function CatalogToolbar({
           </button>
         </div>
       </section>
+
+      {formContent}
 
       <section className="rounded-[2rem] border border-slate-200 bg-white/90 shadow-sm backdrop-blur">
         <button

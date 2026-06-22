@@ -120,36 +120,37 @@ export default function App() {
               setEditingItem(null);
               setShowForm(true);
             }}
+            formContent={
+              showForm ? (
+                <MiniCarForm
+                  mode={editingItem ? 'edit' : 'create'}
+                  initialValues={
+                    editingItem
+                      ? {
+                          carBrand: editingItem.carBrand,
+                          carModel: editingItem.carModel,
+                          carYear: String(editingItem.carYear),
+                          miniBrand: editingItem.miniBrand,
+                          collection: editingItem.collection ?? '',
+                          miniScale: editingItem.miniScale,
+                          photo: null,
+                          photoUrl: editingItem.photoUrl,
+                        }
+                      : undefined
+                  }
+                  onSubmit={handleSubmit}
+                  onCancel={() => {
+                    setShowForm(false);
+                    setEditingItem(null);
+                  }}
+                  fetchBrandSuggestions={fetchBrandSuggestions}
+                  fetchModelSuggestions={fetchModelSuggestions}
+                  fetchMiniBrandSuggestions={fetchMiniBrandSuggestions}
+                  fetchCollectionSuggestions={fetchCollectionSuggestions}
+                />
+              ) : null
+            }
           />
-
-          {showForm ? (
-            <MiniCarForm
-              mode={editingItem ? 'edit' : 'create'}
-              initialValues={
-                editingItem
-                  ? {
-                      carBrand: editingItem.carBrand,
-                      carModel: editingItem.carModel,
-                      carYear: String(editingItem.carYear),
-                      miniBrand: editingItem.miniBrand,
-                      collection: editingItem.collection ?? '',
-                      miniScale: editingItem.miniScale,
-                      photo: null,
-                      photoUrl: editingItem.photoUrl,
-                    }
-                  : undefined
-              }
-              onSubmit={handleSubmit}
-              onCancel={() => {
-                setShowForm(false);
-                setEditingItem(null);
-              }}
-              fetchBrandSuggestions={fetchBrandSuggestions}
-              fetchModelSuggestions={fetchModelSuggestions}
-              fetchMiniBrandSuggestions={fetchMiniBrandSuggestions}
-              fetchCollectionSuggestions={fetchCollectionSuggestions}
-            />
-          ) : null}
 
           {error ? (
             <div

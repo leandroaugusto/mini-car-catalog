@@ -262,6 +262,34 @@ describe('App', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders the create form below actions and above catalog filters', async () => {
+    const user = userEvent.setup();
+    mockCatalogState();
+
+    render(<App />);
+
+    await user.click(screen.getByRole('button', { name: /^add mini car$/i }));
+
+    const actionsHeading = screen.getByRole('heading', {
+      name: /manage collection/i,
+    });
+    const formHeading = screen.getByRole('heading', {
+      name: /add a new mini car/i,
+    });
+    const filtersHeading = screen.getByRole('heading', {
+      name: /refine your collection/i,
+    });
+
+    expect(
+      actionsHeading.compareDocumentPosition(formHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      formHeading.compareDocumentPosition(filtersHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+  });
+
   it('navigates with previous and next pagination buttons', async () => {
     const user = userEvent.setup();
     const setFilters = jest.fn();
