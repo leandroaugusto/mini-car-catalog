@@ -14,4 +14,12 @@ module.exports = {
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   setupFilesAfterEnv: ['<rootDir>/src/test/setup.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  coverageThreshold: {
+    global: {
+      statements: 80,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+    },
+  },
 };

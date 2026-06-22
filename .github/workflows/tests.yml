@@ -32,9 +32,9 @@ jobs:
         working-directory: backend
         run: npm run format:check
 
-      - name: Run backend tests
+      - name: Run backend coverage tests
         working-directory: backend
-        run: npm test
+        run: npm run test:coverage
 
   frontend-tests:
     name: Frontend CI
@@ -63,6 +63,6 @@ jobs:
         working-directory: frontend
         run: npm run format:check
 
-      - name: Run frontend tests
+      - name: Run frontend coverage tests
         working-directory: frontend
-        run: npm test
+        run: npm run test:coverage
