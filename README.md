@@ -40,6 +40,30 @@ cd backend && npm test
 cd frontend && npm test
 ```
 
+## Development Workflow
+
+Run the shared checks from the repository root:
+
+```bash
+npm run lint
+npm run format:check
+npm run test:coverage
+```
+
+To apply formatting across both apps:
+
+```bash
+npm run format
+```
+
+Commits use Husky, commitlint, and Commitizen with conventional commit messages. To create a guided commit message:
+
+```bash
+npm run commit
+```
+
+The `commit-msg` hook will reject commit messages that do not follow the conventional commit format.
+
 ## Create A Database Backup
 
 To create a timestamped MongoDB backup archive from the running Docker Compose stack:

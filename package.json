@@ -3,10 +3,25 @@
   "private": true,
   "scripts": {
     "backup:db": "bash scripts/create-db-backup.sh",
+    "commit": "cz",
+    "commitlint": "commitlint --edit",
     "format": "npm --prefix backend run format && npm --prefix frontend run format",
     "format:check": "npm --prefix backend run format:check && npm --prefix frontend run format:check",
     "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
+    "prepare": "husky",
     "restore:db": "bash scripts/restore-db-backup.sh",
     "test:coverage": "npm --prefix backend run test:coverage && npm --prefix frontend run test:coverage"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "commitizen": "^4.3.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^9.1.7"
   }
 }
